@@ -3,13 +3,14 @@
  * Guarda cada test en la hoja «Resultados» y envía un correo al terminar.
  *
  * Configuración (una sola vez): Configuración del proyecto ▸ Propiedades del script
- *   ADMIN_KEY = clave del panel «Resultados 🔒» (mínimo 8 caracteres, distinta de 12345)
- *   MAIL_TO   = correo que recibe los resultados (por ejemplo erikpro@gmail.com)
+ *   ADMIN_KEY = clave del panel «Resultados 🔒» (mínimo 6 caracteres)
+ *   MAIL_TO   = correo que recibe los resultados
  */
 const HOJA = "Resultados";
 const COLS = ["id","Fecha","Estado","Nombre","Correo","Filtro","Aciertos","Respondidas","Total","Puntaje %","Tiempo (s)","Estrellas","Comentario","Expectativa","Para repasar","Marcadas","Refutaciones","Sugerencias","Guardado","Correo enviado","JSON"];
 
 function props_(){ return PropertiesService.getScriptProperties(); }
+function mailTo_(){ return props_().getProperty("MAIL_TO") || Session.getEffectiveUser().getEmail(); }
 function hoja_(){
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sh = ss.getSheetByName(HOJA);
@@ -17,7 +18,7 @@ function hoja_(){
   return sh;
 }
 function out_(o){ return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
-function esAdmin_(k){ const a = props_().getProperty("ADMIN_KEY") || ""; return a.length >= 8 && String(k || "") === a; }
+function esAdmin_(k){ const a = props_().getProperty("ADMIN_KEY") || ""; return a.length >= 6 && String(k || "") === a; }
 const s_ = (v, m) => typeof v === "string" ? v.slice(0, m) : "";
 const n_ = v => isFinite(+v) ? +v : 0;
 
@@ -38,7 +39,7 @@ function fila_(r, mailed){
     r.refs.map(f => "P" + f.n + ": " + f.c).join(" | "), r.sug.join(" | "), new Date(), mailed ? "sí" : "", JSON.stringify(r)];
 }
 function correo_(r){
-  const to = props_().getProperty("MAIL_TO"); if (!to) return false;
+  const to = mailTo_();
   const N = {B:"Básico", M:"Medio", A:"Avanzado"}, fmt = s => Math.floor(s/60) + " min " + (s%60) + " s";
   const L = [
     "Participante: " + r.n + " <" + r.e + ">",
@@ -92,4 +93,4 @@ function doGet(e){
 }
 
 /** Ejecútala una vez desde el editor para autorizar los permisos de hoja y correo. */
-function probar(){ hoja_(); const to = props_().getProperty("MAIL_TO"); if (to) MailApp.sendEmail(to, "Cuestionario Tecnosmart: prueba", "La conexión funciona."); }
+function probar(){ hoja_(); MailApp.sendEmail(mailTo_(), "Cuestionario Tecnosmart: prueba", "La conexión funciona."); }
