@@ -55,8 +55,8 @@ function correo_(r){
     ["", "REFUTACIONES (" + r.refs.length + "):"], r.refs.map(f => "P" + f.n + " · " + f.c + (f.a ? " (" + f.a + ")" : "")),
     r.sug.length ? ["", "SUGERENCIAS DE PREGUNTAS:"].concat(r.sug.map(x => "- " + x)) : []);
   const ss = SpreadsheetApp.getActiveSpreadsheet();
-  MailApp.sendEmail({ to: to, replyTo: r.e, name: "Cuestionario Tecnosmart",
-    subject: "Test completado: " + r.n + " · " + r.p + "%", body: L.join("\n") + "\n\nHoja de resultados: " + ss.getUrl() });
+  MailApp.sendEmail({ to: to, replyTo: r.e, name: "Certificación Profesional Tecnosmart",
+    subject: "Examen completado: " + r.n + " · " + r.p + "%", body: L.join("\n") + "\n\nHoja de resultados: " + ss.getUrl() });
   return true;
 }
 

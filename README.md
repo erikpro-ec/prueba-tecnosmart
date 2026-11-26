@@ -1,4 +1,4 @@
-# Cuestionario Tecnosmart · Competencia Mejor Técnico
+# Certificación Profesional Tecnosmart · Examen técnico
 
 Página publicada con GitHub Pages. Los resultados se guardan en una Google Sheet y llegan por correo mediante Google Apps Script (`Code.gs`).
 

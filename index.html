@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Competencia Mejor Técnico · banco de preguntas</title>
+<title>Certificación Profesional Tecnosmart · Examen técnico</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -128,8 +128,8 @@ img,svg,video{max-width:100%}
 <body>
 <div class="wrap">
 <header>
-  <h1>Competencia <span>Mejor Técnico</span> · <span id="tot">60</span> preguntas</h1>
-  <p>Hardware, armado, redes, seguridad y B2B para tiendas gamer de Ecuador · Datos verificados al 22-nov-2026 (lo que aún es rumor está indicado como tal)</p>
+  <h1>Certificación Profesional <span>Tecnosmart</span></h1>
+  <p>Examen de competencias técnicas y comerciales · Hardware, redes, seguridad, periféricos y servicio al cliente · <span id="tot">60</span> preguntas · Contenido verificado a noviembre de 2026</p>
   <div class="stats" id="stats"></div>
 </header>
 
@@ -1875,7 +1875,7 @@ const cnt=()=>{const k=wc($("rfC").value);$("rfCnt").textContent=k+" / 60 palabr
 $("rfSave").onclick=()=>{const k=wc($("rfC").value);if(k<1){$("rfErr").textContent="Escribe tu comentario: es obligatorio.";return}if(k>60){$("rfErr").textContent="El comentario supera las 60 palabras ("+k+").";return}
 run.rf[n]={c:$("rfC").value.trim(),a:$("rfA").value.trim()};$("qRefBox").innerHTML="";paintR();saveProgress()};
 $("rfDel").onclick=()=>{delete run.rf[n];$("qRefBox").innerHTML="";paintR()};$("rfX").onclick=()=>{$("qRefBox").innerHTML=""}};})}
-function reportText(r){const L=["REPORTE DE TEST · Competencia Mejor Técnico","Participante: "+r.n,"Correo: "+r.e,"Fecha: "+new Date(r.d).toLocaleString("es-EC"),"Filtro: "+r.f,"Duración: "+Math.floor(r.dur/60)+" min "+r.dur%60+" s","",`CALIFICACIÓN: ${r.p}% (${r.c} de ${r.t})`];
+function reportText(r){const L=["REPORTE DE EXAMEN · Certificación Profesional Tecnosmart","Participante: "+r.n,"Correo: "+r.e,"Fecha: "+new Date(r.d).toLocaleString("es-EC"),"Filtro: "+r.f,"Duración: "+Math.floor(r.dur/60)+" min "+r.dur%60+" s","",`CALIFICACIÓN: ${r.p}% (${r.c} de ${r.t})`];
 ["B","M","A"].forEach(k=>{if(r.by[k])L.push(`  ${LV[k]}: ${r.by[k].o}/${r.by[k].t}`)});
 L.push("","EXPECTATIVA AL EMPEZAR:",r.exp,"","VALORACIÓN DEL TEST: "+(r.rating?r.rating+"/5 "+stars(r.rating):"sin valorar"),"COMENTARIO: "+(r.comment||"(sin comentario)"));
 L.push("","SUGERENCIAS DE PREGUNTAS:");(r.sug&&r.sug.length?r.sug:["(ninguna)"]).forEach((x,i)=>L.push((i+1)+". "+x));
