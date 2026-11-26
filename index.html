@@ -73,6 +73,30 @@ h2{font-size:18px;margin:0 0 10px}
 textarea{width:100%;background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px;font:14px Inter}
 label input[type=text]{width:100%;min-width:0}
 .hidden{display:none}
+.subnav{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-6px 0 14px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.subnav button{background:none;border:1px solid transparent;color:var(--txt);font:600 13px Inter,sans-serif;padding:8px 12px;border-radius:8px;cursor:pointer;min-height:38px}
+.subnav button.on{border-color:var(--acc);color:var(--acc)}.subnav .sp{flex:1}.subnav .lock{color:var(--mut);font-weight:500}
+.share{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}.share input{flex:1;min-width:220px;font-size:13px}
+.banner{border:1px solid var(--acc);background:color-mix(in srgb,var(--acc) 10%,transparent);border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:14px}
+.streak{color:var(--warn);font-weight:700}.keys{font-size:12px;color:var(--mut);margin-top:6px}
+.opt.ok.pop{animation:pop .45s ease}.opt.bad.shake{animation:shake .4s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:60;animation:fadein .2s ease}
+@keyframes fadein{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+.medal{display:flex;align-items:center;gap:16px;margin:14px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel2)}
+.medal .disc{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font:800 15px Inter,sans-serif;color:#1b1b1b;flex:none;box-shadow:inset 0 -6px 0 rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.25)}
+.medal .oro{background:radial-gradient(circle at 35% 30%,#fff3b0,#e0b23a 60%,#a97b10)}.medal .plata{background:radial-gradient(circle at 35% 30%,#fff,#c7ccd6 60%,#8b929e)}
+.medal .bronce{background:radial-gradient(circle at 35% 30%,#ffd9b8,#c9824a 60%,#8a5226)}.medal .base{background:radial-gradient(circle at 35% 30%,#e8eef7,#9fb0c8 60%,#62728a)}
+.medal h3{margin:0 0 2px;font-size:20px}.medal p{margin:0;color:var(--mut);font-size:14px}
+.tbars{display:grid;gap:7px;margin:8px 0 6px}.tbar{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,2fr) 52px;gap:10px;align-items:center;font-size:13px}
+.tbar .tr{height:10px;background:var(--panel2);border-radius:99px;overflow:hidden}.tbar .tr i{display:block;height:100%;border-radius:99px}
+.tbar span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.cert{background:#fffdf7;color:#1d2433;border:10px double #b8913a;border-radius:6px;padding:34px 30px;text-align:center;font-family:Georgia,'Times New Roman',serif}
+.cert .k{letter-spacing:.06em;font:700 13px Inter,sans-serif;color:#8a6a20}.cert h2{font-size:30px;margin:10px 0 6px;color:#1d2433}.cert .nm{font-size:28px;font-style:italic;margin:14px 0 6px;border-bottom:1px solid #c9b47a;display:inline-block;padding:0 24px 6px}
+.cert p{margin:6px 0;color:#3a4255}.cert .row2{display:flex;justify-content:space-between;gap:12px;margin-top:22px;font:500 12px Inter,sans-serif;color:#555}
+@media (prefers-reduced-motion:reduce){.opt.ok.pop,.opt.bad.shake,.toast{animation:none}}
+@media print{body.printcert *{visibility:hidden}body.printcert #certBox,body.printcert #certBox *{visibility:visible}body.printcert #certBox{position:fixed;inset:0;margin:auto;max-width:900px}}
 .segs{border:1px solid var(--line);border-radius:8px;padding:6px 10px 8px;margin:0;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;background:var(--panel2)}
 .segs legend{font-size:12px;color:var(--mut);padding:0 4px}
 .segs label{flex-direction:row;align-items:center;gap:6px;font-size:13px;color:var(--txt);cursor:pointer;min-height:32px}
@@ -134,12 +158,17 @@ img,svg,video{max-width:100%}
 </header>
 
 <nav>
-  <button data-v="quiz">Quiz</button>
-  <button data-v="tarjetas">Tarjetas (oral)</button>
-  <button data-v="banco">Banco completo</button>
-  <button data-v="plan">Plan de estudio</button>
+  <button data-v="quiz">Examen</button>
+  <button data-v="interno">Uso interno 🔒</button>
   <button data-v="admin">Resultados 🔒</button>
 </nav>
+<div class="subnav hidden" id="inSub"><button data-v="tarjetas">Tarjetas (oral)</button><button data-v="banco">Banco completo</button><button data-v="plan">Plan de estudio</button><span class="sp"></span><span class="lock" id="inIdle"></span><button id="inOut" type="button">Cerrar sesión</button></div>
+<section id="v-interno" class="hidden">
+  <div class="panel"><h2>Uso interno · Tecnosmart</h2><p class="note">Tarjetas de estudio, banco completo de preguntas con respuestas y plan de estudio. Acceso solo para el equipo.</p>
+    <label>Clave de acceso<input type="password" id="inPw" autocomplete="off"></label>
+    <div class="err" id="inErr"></div><div class="row" style="margin-top:8px"><button class="btn" id="inGo" type="button">Entrar</button></div>
+    <p class="note" style="margin-top:8px">La sesión se cierra sola tras 15 minutos sin actividad.</p></div>
+</section>
 
 <!-- QUIZ -->
 <section id="v-admin" class="hidden">
@@ -149,21 +178,22 @@ img,svg,video{max-width:100%}
   <div class="panel hidden" id="adBody"></div>
 </section>
 
-<section id="v-quiz" class="hidden">
+<section id="v-quiz" class="hidden"><div class="banner hidden" id="qShared"></div>
   <div class="panel" id="qSetup">
     <h2>Simulacro</h2>
     <div class="row">
       <label>Nombre completo <span class="req">*</span><input type="text" id="qName" placeholder="Nombre y apellido" autocomplete="name"></label>
-      <label>Correo corporativo <span class="req">*</span><input type="email" id="qEmail" placeholder="nombre@tecnosmart.com.ec" autocomplete="email" inputmode="email"></label>
+      <label>Correo electrónico <span class="req">*</span><input type="email" id="qEmail" placeholder="tu@correo.com" autocomplete="email" inputmode="email"></label>
       <label>Nivel<select id="qLvl"><option value="all">Todos</option><option value="B">Básico</option><option value="M">Medio</option><option value="A">Avanzado</option></select></label><label>Tipo<select id="qTipo"><option value="all">Todos</option><option value="Concepto">Conceptos</option><option value="Caso">Casos prácticos</option></select></label>
       <fieldset class="segs" id="qSeg"><legend>Segmentos (marca los que entran)</legend></fieldset>
       <label>Preguntas<select id="qCount"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="60">60</option><option value="100">100</option><option value="999" selected>Todas</option></select></label>
-      <button class="btn" id="qStart">Empezar</button>
+      <button class="btn" id="qStart">Empezar examen</button>
     </div>
     <div class="err" id="qErr"></div>
-    <p class="note" style="margin-top:4px">El correo debe terminar en <b>@tecnosmart.com.ec</b>. Las opciones se mezclan en cada intento. Tu avance se guarda después de cada respuesta. <b>Bandera 🚩:</b> si tardas más de 30 s en una pregunta se marca sola como «no estuve seguro»; si sí estabas seguro, <b>tócala para desmarcarla</b>.</p><div class="dbst no" id="dbSt">Guardado: en este navegador.</div>
+    <div class="share"><button class="btn ghost" id="qShare" type="button">🔗 Copiar link de este examen</button><span class="note">Comparte la misma configuración (nivel, tipo, segmentos y cantidad).</span></div>
+    <p class="note" style="margin-top:8px">Las opciones se mezclan en cada intento. Tu avance se guarda después de cada respuesta. <b>Bandera 🚩:</b> si tardas más de 40 s en una pregunta se marca sola como «no estuve seguro»; si sí estabas seguro, <b>tócala para desmarcarla</b>.</p><p class="note">Atajos: teclas <b>1–4</b> para responder y <b>Enter</b> para continuar. Tras 15 minutos sin actividad el examen se cierra y se guarda lo respondido.</p><div class="dbst no" id="dbSt">Guardado: en este navegador.</div>
     <div class="row" style="margin-top:8px"></div>
-    <div id="qHist"></div>
+    <div id="qHist" class="hidden"></div>
   </div>
   <div class="panel hidden" id="qRun"></div>
 </section>
@@ -1774,9 +1804,25 @@ f.addEventListener("change",cb);f.querySelectorAll(".lnk").forEach(b=>b.onclick=
 const segSel=id=>[...$(id).querySelectorAll("input:checked")].map(i=>i.value);
 
 /* ---------- Navegación ---------- */
-const views=["quiz","tarjetas","banco","plan","admin"];
-function show(v){if(!views.includes(v))v="quiz";if(v!=="admin"&&typeof adOpen!=="undefined"&&adOpen){adOpen=false;$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value=""}views.forEach(n=>$("v-"+n).classList.toggle("hidden",n!==v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(location.hash!=="#"+v)history.replaceState(null,"","#"+v)}
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));
+const views=["quiz","interno","tarjetas","banco","plan","admin"],INT=["tarjetas","banco","plan"];let INOK=false;
+function show(v){if(!views.includes(v))v="quiz";if(INT.includes(v)&&!INOK)v="interno";if(v==="interno"&&INOK)v="tarjetas";if(v!=="admin"&&typeof adOpen!=="undefined"&&adOpen){adOpen=false;$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value=""}views.forEach(n=>$("v-"+n).classList.toggle("hidden",n!==v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v||(b.dataset.v==="interno"&&INT.includes(v))));$("inSub").classList.toggle("hidden",!(INOK&&INT.includes(v)));document.querySelectorAll("#inSub button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(location.hash!=="#"+v)history.replaceState(null,"","#"+v)}
+document.querySelectorAll("nav button,#inSub button[data-v]").forEach(b=>b.onclick=()=>show(b.dataset.v));
+async function checkKey(v){if(!v)return false;if(APIOK)return await apiAuth(v);return await pwOk(v)}
+async function inEnter(){const v=$("inPw").value;$("inErr").textContent="Verificando…";const ok=await checkKey(v);if(!ok){$("inErr").textContent="Clave incorrecta.";return}
+INOK=true;EDOK=true;$("inPw").value="";$("inErr").textContent="";if($("bLockSt")){$("bLockSt").textContent="🔓 Edición desbloqueada";$("bLock").classList.remove("hidden")}show("tarjetas")}
+$("inGo").onclick=inEnter;$("inPw").onkeydown=e=>{if(e.key==="Enter")inEnter()};
+function lockInterno(){INOK=false;EDOK=false;EDIT=null;if($("bLockSt")){$("bLockSt").textContent="🔒 Edición bloqueada";$("bLock").classList.add("hidden")}if(INT.includes(location.hash.slice(1)))show("interno")}
+$("inOut").onclick=()=>{lockInterno();toast("Sesión de uso interno cerrada")};
+function toast(t){const d=document.createElement("div");d.className="toast";d.setAttribute("role","status");d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+/* Cierre por inactividad (15 min) */
+const IDLE=15*60*1000;let lastAct=Date.now();
+["pointerdown","keydown","touchstart","scroll","wheel"].forEach(ev=>window.addEventListener(ev,()=>{lastAct=Date.now()},{passive:true}));
+setInterval(()=>{const idle=Date.now()-lastAct;if($("inIdle"))$("inIdle").textContent=INOK?"Cierre automático en "+Math.max(0,Math.ceil((IDLE-idle)/60000))+" min":"";
+ if(idle<IDLE)return;let closed=false;
+ if(INOK){lockInterno();closed=true}
+ if(typeof adOpen!=="undefined"&&adOpen){adOpen=false;ADKEY="";$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value="";closed=true}
+ if(run&&!run.done){idleClose();closed=true}
+ if(closed){lastAct=Date.now();toast("Sesión cerrada por 15 minutos de inactividad")}},20000);
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)));
 
 
@@ -1807,7 +1853,7 @@ $("adReload").onclick=async()=>{REMOTE=await loadRemote();renderAdmin()};
 $("adImpGo").onclick=async()=>{const rs=parseCodes($("adImp").value);if(!rs.length){$("adImpMsg").textContent="No encontré códigos válidos.";return}
 rs.forEach(r=>savePerson(Object.assign({src:"importado"},hyd(r))));if(DB){for(const r of rs){try{await DB.doc("imports/"+r.id).set(r)}catch(e){}}}
 IMPMSG=rs.length+" resultado(s) importado(s).";REMOTE=await loadRemote();renderAdmin()}}
-async function adEnter(){let ok=await pwOk($("adPw").value);if(APIOK){ok=await apiAuth($("adPw").value);if(ok)ADKEY=$("adPw").value}if(ok){adOpen=true;$("adErr").textContent="";$("adGate").classList.add("hidden");$("adBody").classList.remove("hidden");renderAdmin();loadRemote().then(r=>{REMOTE=r||[];if(adOpen)renderAdmin()})}else{$("adErr").textContent="Clave incorrecta.";$("adPw").select()}}
+async function adEnter(){const ok=await checkKey($("adPw").value);if(ok&&APIOK)ADKEY=$("adPw").value;if(ok){adOpen=true;$("adErr").textContent="";$("adGate").classList.add("hidden");$("adBody").classList.remove("hidden");renderAdmin();loadRemote().then(r=>{REMOTE=r||[];if(adOpen)renderAdmin()})}else{$("adErr").textContent="Clave incorrecta.";$("adPw").select()}}
 $("adGo").onclick=adEnter;$("adPw").onkeydown=e=>{if(e.key==="Enter")adEnter()};
 
 /* ---------- Almacenamiento compartido ---------- */
@@ -1837,7 +1883,7 @@ function mergedPeople(){const m={};const rank=r=>(r.st==="en curso"?0:2)+(r.rati
 
 /* ---------- Quiz ---------- */
 let run=null,tmr=null;const strip=h=>String(h).replace(/<[^>]+>/g,"").replace(/&amp;/g,"&");const fmtT=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
-const DOM=/^[^\s@]+@tecnosmart\.com\.ec$/i,ENDPOINT="";
+const MAILRX=/^[^\s@<>"]+@[^\s@<>"]+\.[a-z]{2,}$/i,TSRX=/@tecnosmart\.com\.ec$/i,ENDPOINT="";
 const wc=t=>(t.trim().match(/\S+/g)||[]).length;
 const people=()=>store.get("ts_people",[]);
 function savePerson(r){const a=people(),i=a.findIndex(x=>x.id===r.id);if(i>=0)a[i]=r;else a.push(r);store.set("ts_people",a)}
@@ -1848,25 +1894,28 @@ $("qHist").innerHTML=`<h2 style="margin-top:18px">Historial de participantes (es
 let pend=null;
 $("qStart").onclick=()=>{const n=$("qName").value.trim().replace(/\s+/g," "),e=$("qEmail").value.trim().toLowerCase(),err=$("qErr");err.textContent="";
 if(n.length<3||!/\S+\s+\S+/.test(n)){err.textContent="Escribe tu nombre completo (nombre y apellido).";$("qName").focus();return}
-if(!DOM.test(e)){err.textContent="Debes usar tu correo corporativo que termine en @tecnosmart.com.ec.";$("qEmail").focus();return}
+if(!MAILRX.test(e)){err.textContent="Escribe un correo electrónico válido.";$("qEmail").focus();return}
 const l=$("qLvl").value,sg=segSel("qSeg"),c=+$("qCount").value;if(!sg.length){err.textContent="Marca al menos un segmento.";return}const kt=$("qTipo").value;const pool=shuffle(filt(l,sg,kt)).slice(0,c);
 if(!pool.length){err.textContent="No hay preguntas con ese filtro.";return}
-store.set("ts_me",{n,e});pend={n,e,pool,f:`${l==="all"?"Todos":LV[l]} · ${sg.length===SEGS.length?"Todos":sg.join(", ")}${kt==="all"?"":kt==="Caso"?" · Casos prácticos":" · Conceptos"}`};
+store.set("ts_me",{n,e});pend={n,e,pool,cfg:{l,sg,kt,c},f:`${l==="all"?"Todos":LV[l]} · ${sg.length===SEGS.length?"Todos":sg.join(", ")}${kt==="all"?"":kt==="Caso"?" · Casos prácticos":" · Conceptos"}${TSRX.test(e)?"":" · Invitado"}`};
 $("expTxt").value="";$("expErr").textContent="";$("expModal").classList.remove("hidden");$("expTxt").focus()};
 $("expNo").onclick=()=>$("expModal").classList.add("hidden");
 $("expGo").onclick=()=>{const t=$("expTxt").value.trim();if(wc(t)<3){$("expErr").textContent="Cuéntanos tu expectativa con al menos unas palabras.";return}
-$("expModal").classList.add("hidden");run={id:"r"+Date.now().toString(36),d:new Date().toISOString(),pool:pend.pool,i:0,ok:0,miss:[],f:pend.f,n:pend.n,e:pend.e,exp:t,t0:Date.now(),fl:{},rf:{},qt:{},res:{}};saveProgress();
+$("expModal").classList.add("hidden");run={id:"r"+Date.now().toString(36),d:new Date().toISOString(),pool:pend.pool,cfg:pend.cfg,streak:0,best:0,i:0,ok:0,miss:[],f:pend.f,n:pend.n,e:pend.e,exp:t,t0:Date.now(),fl:{},rf:{},qt:{},res:{}};saveProgress();
 $("qSetup").classList.add("hidden");$("qRun").classList.remove("hidden");renderQ();clearInterval(tmr);tmr=setInterval(()=>{const el=$("qTimer");if(el&&run)el.textContent="⏱ "+fmtT(Math.round((Date.now()-run.t0)/1000))},1000);window.scrollTo(0,0)};
+document.addEventListener("keydown",e=>{if(!run||run.done||$("qRun").classList.contains("hidden"))return;const tg=e.target.tagName;if(tg==="TEXTAREA"||tg==="INPUT"||tg==="SELECT")return;
+ if(!run.ans&&/^[1-4]$/.test(e.key)){const b=$("qRun").querySelector('.opt[data-k="'+e.key+'"]');if(b){e.preventDefault();b.click()}}
+ else if(run.ans&&e.key==="Enter"&&$("qNext")){e.preventDefault();$("qNext").click()}});
 function renderQ(){const x=run.pool[run.i];const opts=shuffle(x.o.map((t,j)=>({t,c:j===0})));
-$("qRun").innerHTML=`<div class="qhead"><span class="qnum">Pregunta ${run.i+1} de ${run.pool.length} · P${x.n}</span><span class="qnum" id="qTimer">⏱ ${fmtT(Math.round((Date.now()-run.t0)/1000))}</span><span class="qnum">✓ ${run.ok}</span></div>
-<div class="bar"><i style="width:${run.i/run.pool.length*100}%"></i></div><div>${chips(x)}</div><div class="qtext">${x.q}</div><div class="row" style="margin:6px 0;align-items:center"><button class="btn ghost" id="qFlag" type="button"></button><span class="note" id="qFlagNote"></span></div>
-<div class="opts">${opts.map((o,j)=>`<button class="opt" data-c="${o.c?1:0}">${String.fromCharCode(65+j)}) ${o.t}</button>`).join("")}</div><div id="qExp"></div><div id="qRefBox"></div>`;
+$("qRun").innerHTML=`<div class="qhead"><span class="qnum">Pregunta ${run.i+1} de ${run.pool.length} · P${x.n}</span><span class="qnum" id="qTimer">⏱ ${fmtT(Math.round((Date.now()-run.t0)/1000))}</span><span class="qnum">✓ ${run.ok}${run.streak>=3?` · <span class="streak">🔥 racha ${run.streak}</span>`:""}</span></div>
+<div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${run.pool.length}" aria-valuenow="${run.i}"><i style="width:${run.i/run.pool.length*100}%"></i></div><div>${chips(x)}</div><div class="qtext">${x.q}</div><div class="row" style="margin:6px 0;align-items:center"><button class="btn ghost" id="qFlag" type="button"></button><span class="note" id="qFlagNote"></span></div>
+<div class="opts">${opts.map((o,j)=>`<button class="opt" data-c="${o.c?1:0}" data-k="${j+1}">${String.fromCharCode(65+j)}) ${o.t}</button>`).join("")}</div><div id="qExp"></div><div id="qRefBox"></div>`;
 const n=x.n;clearTimeout(run.at);run.q0=Date.now();run.ans=false;
-const paintF=()=>{const f=run.fl[n],on=!!(f&&f.m);$("qFlag").classList.toggle("on",on);$("qFlag").textContent=on?"🚩 Marcada: no estuve seguro (quitar)":"🚩 En esta pregunta no estuve seguro";$("qFlagNote").textContent=on&&f.auto?"Se marcó sola por pasar de 30 s. Si sí estabas seguro, toca la bandera para desmarcarla.":on?"Toca la bandera otra vez para desmarcarla.":""};paintF();
+const paintF=()=>{const f=run.fl[n],on=!!(f&&f.m);$("qFlag").classList.toggle("on",on);$("qFlag").textContent=on?"🚩 Marcada: no estuve seguro (quitar)":"🚩 En esta pregunta no estuve seguro";$("qFlagNote").textContent=on&&f.auto?"Se marcó sola por pasar de 40 s. Si sí estabas seguro, toca la bandera para desmarcarla.":on?"Toca la bandera otra vez para desmarcarla.":""};paintF();
 $("qFlag").onclick=()=>{const f=run.fl[n];run.fl[n]=(f&&f.m)?{m:false,off:true}:{m:true,auto:false,sec:Math.round((Date.now()-run.q0)/1000)};paintF();if(run.ans)saveProgress()};
-run.at=setTimeout(()=>{if(!run.ans&&!(run.fl[n]&&run.fl[n].off)&&!(run.fl[n]&&run.fl[n].m)){run.fl[n]={m:true,auto:true,sec:30};paintF()}},30000);
-$("qRun").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const good=b.dataset.c==="1";if(good)run.ok++;else run.miss.push(x);run.ans=true;clearTimeout(run.at);run.qt[n]=Math.round((Date.now()-run.q0)/1000);run.res[n]=good;saveProgress();
-$("qRun").querySelectorAll(".opt").forEach(o=>{o.disabled=true;if(o.dataset.c==="1")o.classList.add("ok")});if(!good)b.classList.add("bad");
+run.at=setTimeout(()=>{if(!run.ans&&!(run.fl[n]&&run.fl[n].off)&&!(run.fl[n]&&run.fl[n].m)){run.fl[n]={m:true,auto:true,sec:40};paintF()}},40000);
+$("qRun").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const good=b.dataset.c==="1";if(good){run.ok++;run.streak++;run.best=Math.max(run.best,run.streak)}else{run.miss.push(x);run.streak=0}run.ans=true;clearTimeout(run.at);run.qt[n]=Math.round((Date.now()-run.q0)/1000);run.res[n]=good;saveProgress();
+$("qRun").querySelectorAll(".opt").forEach(o=>{o.disabled=true;if(o.dataset.c==="1")o.classList.add("ok")});if(good)b.classList.add("pop");else b.classList.add("bad","shake");
 $("qExp").innerHTML=`<div class="exp"><b>${good?"¡Correcto!":"Respuesta correcta: "+x.o[0]}</b><br>${x.e}</div><div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn ghost" id="qRef" type="button"></button>${(run.pool.length>10&&(run.i+1)>=Math.ceil(run.pool.length*0.6)&&run.i+1<run.pool.length)?`<button class="btn ghost" id="qQuit">Terminar</button>`:""}<button class="btn" id="qNext">${run.i+1<run.pool.length?"Siguiente →":"Ver resultado"}</button></div>`;
 $("qNext").onclick=()=>{run.i++;run.i<run.pool.length?renderQ():endQ()};if($("qQuit"))$("qQuit").onclick=()=>{run.pool=run.pool.slice(0,run.i+1);endQ()};
 const paintR=()=>{$("qRef").textContent=run.rf[n]?"⚖ Refutación guardada (editar)":"⚖ Refutar respuesta"};paintR();
@@ -1879,25 +1928,59 @@ function reportText(r){const L=["REPORTE DE EXAMEN · Certificación Profesional
 ["B","M","A"].forEach(k=>{if(r.by[k])L.push(`  ${LV[k]}: ${r.by[k].o}/${r.by[k].t}`)});
 L.push("","EXPECTATIVA AL EMPEZAR:",r.exp,"","VALORACIÓN DEL TEST: "+(r.rating?r.rating+"/5 "+stars(r.rating):"sin valorar"),"COMENTARIO: "+(r.comment||"(sin comentario)"));
 L.push("","SUGERENCIAS DE PREGUNTAS:");(r.sug&&r.sug.length?r.sug:["(ninguna)"]).forEach((x,i)=>L.push((i+1)+". "+x));
-const fl=r.flags||[],rf=r.refs||[];L.push("","PREGUNTAS MARCADAS COMO DUDOSAS ("+fl.length+"):");(fl.length?fl:[null]).forEach(f=>L.push(f?"P"+f.n+" · "+f.q+" · "+(f.auto?"automática (más de 30 s)":"manual")+" · "+f.sec+" s · "+(f.ok?"acertó":"falló"):"(ninguna)"));
+const fl=r.flags||[],rf=r.refs||[];L.push("","PREGUNTAS MARCADAS COMO DUDOSAS ("+fl.length+"):");(fl.length?fl:[null]).forEach(f=>L.push(f?"P"+f.n+" · "+f.q+" · "+(f.auto?"automática (más de 40 s)":"manual")+" · "+f.sec+" s · "+(f.ok?"acertó":"falló"):"(ninguna)"));
 L.push("","RESPUESTAS REFUTADAS ("+rf.length+"):");if(!rf.length)L.push("(ninguna)");rf.forEach(f=>{L.push("P"+f.n+" · "+f.q+" · "+(f.ok?"acertó":"falló"));L.push("   Comentario: "+f.c);if(f.a)L.push("   Propone / fuente: "+f.a)});
 L.push("","PARA REPASAR ("+r.miss.length+"):");r.miss.forEach(m=>L.push("P"+m.n+" · "+m.q));return L.join("\n")}
 function buildRec(done){const pool=done?run.pool:run.pool.filter(x=>x.n in run.res),t=pool.length,p=t?Math.round(run.ok/t*100):0;const by={};pool.forEach(x=>{by[x.l]=by[x.l]||{t:0,o:0};by[x.l].t++;if(run.res[x.n])by[x.l].o++});
 const old=run.rec||{};return run.rec={id:run.id,d:run.d,st:done?"completo":"en curso",tq:run.pool.length,n:run.n,e:run.e,f:run.f,p,c:run.ok,t,by,miss:run.miss.map(x=>({n:x.n,q:x.q})),exp:run.exp,dur:Math.round((Date.now()-run.t0)/1000),rating:old.rating||0,comment:old.comment||"",sug:old.sug||[],flags:pool.filter(x=>run.fl[x.n]&&run.fl[x.n].m).map(x=>({n:x.n,q:strip(x.q),auto:!!run.fl[x.n].auto,sec:run.fl[x.n].sec||run.qt[x.n]||0,ok:!!run.res[x.n]})),refs:pool.filter(x=>run.rf[x.n]).map(x=>({n:x.n,q:strip(x.q),c:run.rf[x.n].c,a:run.rf[x.n].a,ok:!!run.res[x.n]}))}}
+function idleClose(){clearInterval(tmr);clearTimeout(run.at);const r=buildRec(false);savePerson(r);dbSave(r);run.done=true;
+$("qRun").innerHTML=`<h2>Examen cerrado por inactividad</h2><p>Pasaron 15 minutos sin actividad. Guardamos lo que respondiste: <b>${r.t} de ${r.tq}</b> preguntas (${r.c} correctas).</p><div class="row" style="margin-top:12px"><button class="btn" id="qBack" type="button">Volver al inicio</button></div>`;
+$("qBack").onclick=()=>{run=null;$("qRun").classList.add("hidden");$("qSetup").classList.remove("hidden");window.scrollTo(0,0)}}
+function shareURL(cfg){const base=/github\.io$/.test(location.hostname)?location.origin+location.pathname:"https://erikpro-ec.github.io/prueba-tecnosmart/";const u=new URLSearchParams();
+ if(cfg.l&&cfg.l!=="all")u.set("nivel",cfg.l);if(cfg.sg&&cfg.sg.length&&cfg.sg.length<SEGS.length)u.set("seg",cfg.sg.join(","));if(cfg.kt&&cfg.kt!=="all")u.set("tipo",cfg.kt);if(cfg.c)u.set("n",cfg.c);const q=u.toString();return base+(q?"?"+q:"")+"#quiz"}
+async function copyLink(url,btn){let ok=false;try{await navigator.clipboard.writeText(url);ok=true}catch(e){}
+ if(ok){toast("Link copiado: compártelo por WhatsApp o correo");return}const box=document.createElement("div");box.className="share";box.innerHTML='<input type="text" readonly aria-label="Link del examen">';box.firstChild.value=url;btn.parentNode.after(box);box.firstChild.select();toast("Selecciona y copia el link")}
+function curCfg(){return {l:$("qLvl").value,sg:segSel("qSeg"),kt:$("qTipo").value,c:+$("qCount").value}}
+function applyShared(){const u=new URLSearchParams(location.search);if(![...u.keys()].length)return;const l=u.get("nivel"),sg=(u.get("seg")||"").split(",").filter(x=>SEGS.includes(x)),kt=u.get("tipo"),c=u.get("n");
+ if(["B","M","A"].includes(l))$("qLvl").value=l;if(["Concepto","Caso"].includes(kt))$("qTipo").value=kt;if(c&&[...$("qCount").options].some(o=>o.value===c))$("qCount").value=c;
+ if(sg.length)$("qSeg").querySelectorAll("input").forEach(i=>i.checked=sg.includes(i.value));
+ const desc=[l&&LV[l]?LV[l]:"Todos los niveles",kt==="Caso"?"Casos prácticos":kt==="Concepto"?"Conceptos":"",sg.length?sg.join(", "):"",c?(c==="999"?"todas las preguntas":c+" preguntas"):""].filter(Boolean).join(" · ");
+ $("qShared").innerHTML="<b>Te compartieron este examen:</b> "+esc(desc)+". Escribe tu nombre y correo para empezar.";$("qShared").classList.remove("hidden")}
+function medalOf(p){return p>=90?{c:"oro",n:"Oro",t:"Dominio sobresaliente"}:p>=80?{c:"plata",n:"Plata",t:"Dominio avanzado"}:p>=70?{c:"bronce",n:"Bronce",t:"Certificación aprobada"}:{c:"base",n:"En formación",t:"Sigue practicando: necesitas 70 % para certificarte"}}
+function topicBars(pool){const g={};pool.forEach(x=>{const k=x.t.split("·")[0].trim();g[k]=g[k]||{t:0,o:0};g[k].t++;if(run.res[x.n])g[k].o++});
+ return Object.entries(g).sort((a,b)=>(a[1].o/a[1].t)-(b[1].o/b[1].t)||b[1].t-a[1].t).slice(0,10).map(([k,v])=>{const p=Math.round(v.o/v.t*100);return `<div class="tbar"><span>${esc(k)}</span><div class="tr"><i style="width:${p}%;background:${p>=80?"var(--ok)":p>=60?"var(--warn)":"var(--bad)"}"></i></div><span>${v.o}/${v.t}</span></div>`}).join("")}
+function certHTML(r,m){const d=new Date(r.d).toLocaleDateString("es-EC",{day:"numeric",month:"long",year:"numeric"});return `<div class="cert" id="certBox"><div class="k">TECNOSMART · GUAYAQUIL, ECUADOR</div><h2>Certificación Profesional Tecnosmart</h2><p>Se certifica que</p><div class="nm">${esc(r.n)}</div><p>aprobó el examen de competencias técnicas y comerciales con una calificación de <b>${r.p}%</b> (${r.c} de ${r.t}).</p><p>Nivel obtenido: <b>${m.n}</b> · ${esc(r.f)}</p><div class="row2"><span>Fecha: ${d}</span><span>Código: ${esc(r.id).toUpperCase()}</span></div></div>`}
+function certPNG(r,m){const c=document.createElement("canvas");c.width=1600;c.height=1100;const x=c.getContext("2d");x.fillStyle="#fffdf7";x.fillRect(0,0,1600,1100);x.strokeStyle="#b8913a";x.lineWidth=14;x.strokeRect(30,30,1540,1040);x.lineWidth=3;x.strokeRect(58,58,1484,984);
+ x.textAlign="center";x.fillStyle="#8a6a20";x.font="bold 30px Arial";x.fillText("TECNOSMART · GUAYAQUIL, ECUADOR",800,170);x.fillStyle="#1d2433";x.font="bold 66px Georgia";x.fillText("Certificación Profesional Tecnosmart",800,280);
+ x.font="34px Georgia";x.fillStyle="#3a4255";x.fillText("Se certifica que",800,380);x.font="italic 64px Georgia";x.fillStyle="#1d2433";x.fillText(r.n,800,480);x.fillRect(450,505,700,2);
+ x.font="32px Georgia";x.fillStyle="#3a4255";x.fillText("aprobó el examen de competencias técnicas y comerciales",800,590);x.fillText("con una calificación de "+r.p+"% ("+r.c+" de "+r.t+")",800,640);
+ x.font="bold 40px Georgia";x.fillStyle={oro:"#a97b10",plata:"#6f7784",bronce:"#8a5226",base:"#4a5568"}[m.c];x.fillText("Nivel "+m.n,800,730);
+ x.font="26px Arial";x.fillStyle="#555";x.textAlign="left";x.fillText("Fecha: "+new Date(r.d).toLocaleDateString("es-EC"),120,960);x.textAlign="right";x.fillText("Código: "+r.id.toUpperCase(),1480,960);return c.toDataURL("image/png")}
 function saveProgress(){if(!run)return;const r=buildRec(false);savePerson(r);dbSave(r)}
-function endQ(){clearInterval(tmr);clearTimeout(run.at);const r=buildRec(true),t=r.t,p=r.p,by=r.by;
+function endQ(){clearInterval(tmr);clearTimeout(run.at);run.done=true;const r=buildRec(true),t=r.t,p=r.p,by=r.by,m=medalOf(p),missed=run.miss.slice(),cfg=run.cfg;
 savePerson(r);dbSave(r);
-$("qRun").innerHTML=`<div class="qnum">Resultado · ${esc(r.n)}</div><div class="score" style="color:${p>=85?"var(--ok)":p>=70?"var(--warn)":"var(--bad)"}">${p}%</div><p class="note">${run.ok} de ${t} correctas · ⏱ Tiempo: <b>${fmtT(r.dur)}</b> · ${esc(run.f)}</p>
+$("qRun").innerHTML=`<div class="qnum">Resultado · ${esc(r.n)}</div><div class="score" style="color:${p>=85?"var(--ok)":p>=70?"var(--warn)":"var(--bad)"}">${p}%</div><p class="note">${run.ok} de ${t} correctas · ⏱ Tiempo: <b>${fmtT(r.dur)}</b> · Mejor racha: <b>${run.best}</b> · ${esc(run.f)}</p>
+<div class="medal"><div class="disc ${m.c}">${m.c==="base"?"—":m.n.toUpperCase()}</div><div><h3>${m.n==="En formación"?"En formación":"Insignia "+m.n}</h3><p>${m.t}</p></div></div>
+<div class="row" style="gap:8px;flex-wrap:wrap">${p>=70?`<button class="btn" id="qCert" type="button">🎓 Ver certificado</button>`:""}${missed.length?`<button class="btn ghost" id="qRetry" type="button">↻ Repasar mis errores (${missed.length})</button>`:""}<button class="btn ghost" id="qShare2" type="button">🔗 Copiar link de este examen</button></div>
+<div id="qCertBox"></div>
+<h2 style="margin-top:16px">Desempeño por tema</h2><p class="note">Ordenado de más débil a más fuerte.</p><div class="tbars">${topicBars(run.pool)}</div>
 <table><tr><th>Nivel</th><th>Aciertos</th></tr>${["B","M","A"].filter(k=>by[k]).map(k=>`<tr><td>${LV[k]}</td><td>${by[k].o}/${by[k].t}</td></tr>`).join("")}</table>
 ${run.miss.length?`<h2 style="margin-top:16px">Para repasar</h2><table>${run.miss.map(x=>`<tr><td class="qnum">P${x.n}</td><td>${x.q}<br><span style="color:var(--ok)">${x.o[0]}</span></td></tr>`).join("")}</table>`:""}
 ${r.flags.length?`<h2 style="margin-top:16px">Marcadas: no estuviste seguro</h2><table>${r.flags.map(f=>`<tr><td class="qnum">P${f.n}</td><td>${esc(f.q)}<br><span class="note">${f.auto?"Marcada automáticamente":"Marcada por ti"} · ${f.sec} s · ${f.ok?"acertaste":"fallaste"}</span></td></tr>`).join("")}</table>`:""}
 ${r.refs.length?`<h2 style="margin-top:16px">Respuestas que refutaste</h2><table>${r.refs.map(f=>`<tr><td class="qnum">P${f.n}</td><td>${esc(f.q)}<br><span class="note">${esc(f.c)}${f.a?" · Propones: "+esc(f.a):""}</span></td></tr>`).join("")}</table>`:""}
 <div class="fb" style="margin-top:20px;border-top:1px solid var(--line);padding-top:16px"><h2>Cuéntanos qué te pareció</h2>
-<label>Valoración del test <span class="req">*</span></label><div class="stars" id="fbStars" role="radiogroup" aria-label="Valoración">${[1,2,3,4,5].map(i=>`<button type="button" data-n="${i}" aria-label="${i} estrellas">★</button>`).join("")}</div>
+<label>Valoración del examen <span class="req">*</span></label><div class="stars" id="fbStars" role="radiogroup" aria-label="Valoración">${[1,2,3,4,5].map(i=>`<button type="button" data-n="${i}" aria-label="${i} estrellas">★</button>`).join("")}</div>
 <label style="margin-top:8px">Comentario (hasta 100 palabras) <span class="req">*</span><textarea id="fbTxt" rows="4" placeholder="¿Qué te pareció el test?"></textarea></label><div class="cnt" id="fbCnt">0 / 100 palabras</div>
 <label style="margin-top:8px">Sugiere hasta 3 preguntas nuevas (opcional)</label>
 <input type="text" class="fbS" placeholder="Pregunta sugerida 1" maxlength="300"><input type="text" class="fbS" placeholder="Pregunta sugerida 2" maxlength="300" style="margin-top:6px"><input type="text" class="fbS" placeholder="Pregunta sugerida 3" maxlength="300" style="margin-top:6px">
 <div class="err" id="fbErr"></div><div class="row" style="margin-top:6px"><button class="btn" id="fbGo" type="button">Enviar evaluación y reporte</button></div></div>`;
+if($("qCert"))$("qCert").onclick=()=>{$("qCertBox").innerHTML='<div style="margin-top:14px">'+certHTML(r,m)+'</div><div class="row" style="margin-top:10px;gap:8px"><button class="btn" id="cPrint" type="button">Imprimir o guardar PDF</button><a class="btn ghost" id="cPng" download="certificado-tecnosmart.png" href="#">Descargar imagen</a></div>';
+ try{$("cPng").href=certPNG(r,m)}catch(e){$("cPng").remove()}
+ $("cPrint").onclick=()=>{document.body.classList.add("printcert");try{window.print()}catch(e){toast("Tu navegador no permite imprimir desde aquí")}setTimeout(()=>document.body.classList.remove("printcert"),800)};
+ $("certBox").scrollIntoView({behavior:"smooth",block:"center"})};
+if($("qRetry"))$("qRetry").onclick=()=>{run={id:"r"+Date.now().toString(36),d:new Date().toISOString(),pool:shuffle(missed),cfg,streak:0,best:0,i:0,ok:0,miss:[],f:r.f+" · Repaso de errores",n:r.n,e:r.e,exp:"Repaso de las preguntas falladas en el examen anterior",t0:Date.now(),fl:{},rf:{},qt:{},res:{}};saveProgress();
+ renderQ();clearInterval(tmr);tmr=setInterval(()=>{const el=$("qTimer");if(el&&run)el.textContent="⏱ "+fmtT(Math.round((Date.now()-run.t0)/1000))},1000);window.scrollTo(0,0)};
+$("qShare2").onclick=e=>copyLink(shareURL(cfg||curCfg()),e.currentTarget);
 let rating=0;const paint=()=>document.querySelectorAll("#fbStars button").forEach(b=>b.classList.toggle("on",+b.dataset.n<=rating));
 document.querySelectorAll("#fbStars button").forEach(b=>b.onclick=()=>{rating=+b.dataset.n;paint()});
 $("fbTxt").oninput=()=>{const n=wc($("fbTxt").value);$("fbCnt").textContent=n+" / 100 palabras";$("fbCnt").classList.toggle("over",n>100)};
@@ -1943,7 +2026,7 @@ $("bList").innerHTML=(newForm+rows)||"<p class='note'>Sin resultados.</p>";
 }
 let EDOK=false,PEND=null;
 function needKey(fn){if(EDOK)return fn();PEND=fn;const box=$("bKey");box.classList.remove("hidden");$("bKeyPw").value="";$("bKeyErr").textContent="";$("bKeyPw").focus()}
-async function keyGo(){if(await pwOk($("bKeyPw").value)){EDOK=true;$("bKey").classList.add("hidden");$("bLockSt").textContent="🔓 Edición desbloqueada";$("bLock").classList.remove("hidden");const f=PEND;PEND=null;if(f)f()}else $("bKeyErr").textContent="Clave incorrecta."}
+async function keyGo(){if(await checkKey($("bKeyPw").value)){EDOK=true;$("bKey").classList.add("hidden");$("bLockSt").textContent="🔓 Edición desbloqueada";$("bLock").classList.remove("hidden");const f=PEND;PEND=null;if(f)f()}else $("bKeyErr").textContent="Clave incorrecta."}
 $("bList").onclick=e=>{const b=e.target.closest("button");if(!b)return;
 if((b.dataset.ed||b.dataset.del)&&!EDOK){needKey(()=>b.click());return}
 if(b.dataset.ed){EDIT=+b.dataset.ed;renderB();return}
@@ -1960,7 +2043,7 @@ $("bLock").onclick=()=>{EDOK=false;EDIT=null;$("bLock").classList.add("hidden");
 $("bReset").onclick=()=>needKey(()=>{if(!$("bReset").dataset.sure){$("bReset").dataset.sure="1";$("bReset").textContent="Toca otra vez para confirmar la restauración";return}delete $("bReset").dataset.sure;$("bReset").textContent="Restaurar originales (deshace ediciones y eliminaciones)";OV={};DEL=[];store.set("ts_ov",OV);store.set("ts_del",DEL);EDIT=null;refreshAll()});
 ["bQ","bLvl","bTipo"].forEach(id=>$(id).oninput=renderB);
 
-segBox("qSeg",()=>{});segBox("fSeg",()=>buildDeck(false));segBox("bSeg",()=>renderB());setDbSt();
+segBox("qSeg",()=>{});applyShared();$("qShare").onclick=e=>copyLink(shareURL(curCfg()),e.currentTarget);segBox("fSeg",()=>buildDeck(false));segBox("bSeg",()=>renderB());setDbSt();
 renderStats();$("tot").textContent=active().length;
 renderHist();buildDeck(false);renderB();show(location.hash.slice(1)||"quiz");
 </script>
