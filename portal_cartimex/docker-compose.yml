@@ -1,0 +1,23 @@
+services:
+  portal:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data          # registro de órdenes enviadas (ordenes.jsonl)
+    restart: unless-stopped
+    expose:
+      - "8000"
+  caddy:
+    image: caddy:2.8
+    environment:
+      PORTAL_DOMAIN: ${PORTAL_DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [portal]
+    restart: unless-stopped
+volumes:
+  caddy_data:

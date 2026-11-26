@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Compras Cartimex · Tecnosmart</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<!-- Pantalla de acceso -->
+<section id="login" class="login" hidden>
+  <form id="loginForm" class="card login-card" autocomplete="off">
+    <p class="eyebrow">Tecnosmart · uso interno</p>
+    <h1>Compras Cartimex</h1>
+    <label for="password">Clave de acceso</label>
+    <input id="password" type="password" inputmode="numeric" required autofocus>
+    <button type="submit" class="btn primary">Entrar</button>
+    <p id="loginMsg" class="msg error" role="alert"></p>
+  </form>
+</section>
+
+<!-- Aplicación -->
+<div id="app" hidden>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Tecnosmart · Compras</p>
+      <h1>Cartimex</h1>
+    </div>
+    <div class="topbar-right">
+      <span id="cuenta" class="chip"></span>
+      <button id="logout" class="btn ghost" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Búsqueda -->
+    <section class="card">
+      <form id="searchForm" class="search">
+        <input id="q" type="search" placeholder="Código, part number, marca o descripción (ej. 83KA00G3LM, laptop lenovo, monitor 24)" minlength="2" maxlength="80" required>
+        <label class="check"><input id="soloDisp" type="checkbox" checked> Solo con stock</label>
+        <button class="btn primary" type="submit">Buscar</button>
+      </form>
+      <p id="searchMsg" class="msg"></p>
+      <div class="table-wrap">
+        <table id="results" class="grid" hidden>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Producto</th>
+              <th class="num" title="Disponible en Guayaquil (mostrador + otras bodegas)">GYE</th>
+              <th class="num" title="Disponible en Quito (mostrador + otras bodegas)">UIO</th>
+              <th class="num">Precio</th>
+              <th class="num">Precio + IVA</th>
+              <th class="num">Cant.</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="pager"><button id="more" class="btn ghost" type="button" hidden>Ver más resultados</button></div>
+    </section>
+
+    <!-- Carrito / orden -->
+    <section class="card">
+      <div class="section-head">
+        <h2>Orden de compra <span id="cartCount" class="badge">0</span></h2>
+        <div class="actions">
+          <button id="refresh" class="btn ghost" type="button">Actualizar precios y stock</button>
+          <button id="clear" class="btn ghost danger" type="button">Vaciar</button>
+        </div>
+      </div>
+      <p id="cartEmpty" class="empty">Aún no hay productos. Búsquelos arriba y pulse <b>Agregar</b>.</p>
+      <div class="table-wrap">
+        <table id="cart" class="grid" hidden>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Producto</th>
+              <th class="num">GYE</th>
+              <th class="num">UIO</th>
+              <th class="num">Cant.</th>
+              <th class="num">Precio</th>
+              <th class="num">Precio + IVA</th>
+              <th class="num">Subtotal</th>
+              <th class="num">Total + IVA</th>
+              <th>Comentario</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="right">Subtotal · IVA · <b>Total</b></td>
+              <td class="num" id="tSub"></td>
+              <td class="num" id="tTot"></td>
+              <td colspan="2" id="tExtra" class="muted"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <form id="orderForm" class="order-form" hidden>
+        <div class="field">
+          <label for="ref">Referencia (su nº de pedido)</label>
+          <input id="ref" required maxlength="40" pattern="[A-Za-z0-9][A-Za-z0-9_\/\-]{2,39}" title="3 a 40 caracteres: letras, números, - _ /">
+        </div>
+        <div class="field">
+          <label for="entrega">Entrega</label>
+          <select id="entrega">
+            <option value="retiro_gye">Retiro en mostrador Guayaquil</option>
+            <option value="retiro_uio">Retiro en mostrador Quito</option>
+          </select>
+        </div>
+        <div class="field wide">
+          <label for="comentario">Comentario general para Cartimex</label>
+          <textarea id="comentario" rows="2" maxlength="200" placeholder="Ej.: Retira Juan Pérez, C.I. 09…"></textarea>
+          <p class="hint">Nota que recibe Cartimex (general + comentarios por línea): <span id="notaCount">0</span>/200</p>
+        </div>
+        <div class="field wide submit-row">
+          <p id="orderMsg" class="msg" role="status"></p>
+          <button id="submitOrder" class="btn primary big" type="submit">Subir orden a Cartimex</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Órdenes recientes -->
+    <section class="card">
+      <div class="section-head">
+        <h2>Órdenes recientes en Cartimex</h2>
+        <button id="loadOrders" class="btn ghost" type="button">Actualizar</button>
+      </div>
+      <div class="table-wrap">
+        <table id="orders" class="grid compact" hidden>
+          <thead><tr><th>Referencia</th><th>Orden</th><th>Estado</th><th>Detalle</th><th class="num">Total</th><th>Creada</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p id="ordersMsg" class="empty"></p>
+    </section>
+  </main>
+</div>
+
+<!-- Confirmación -->
+<dialog id="confirm">
+  <form method="dialog" class="dialog">
+    <h2>¿Subir esta orden a Cartimex?</h2>
+    <div id="confirmBody"></div>
+    <p class="hint">Cartimex la procesará como una compra real y la facturará a su nombre.</p>
+    <div class="actions right">
+      <button value="cancel" class="btn ghost">Cancelar</button>
+      <button value="ok" id="confirmOk" class="btn primary">Sí, subir orden</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
