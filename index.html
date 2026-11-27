@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Certificación Profesional Tecnosmart · Examen técnico</title>
+<title>Preparación para Certificación Técnica - Tecnosmart</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -165,19 +165,18 @@ img,svg,video{max-width:100%}
 <body>
 <div class="wrap">
 <header>
-  <h1>Certificación Profesional <span>Tecnosmart</span></h1>
+  <h1>Preparación para Certificación Técnica <span>· Tecnosmart</span></h1>
   <p>Examen de competencias técnicas y comerciales · Hardware, redes, seguridad, periféricos y servicio al cliente · <span id="tot">60</span> preguntas · Contenido verificado a noviembre de 2026</p>
   <div class="stats" id="stats"></div>
 </header>
 
 <nav>
-  <button data-v="quiz">Examen</button>
+  <button data-v="quiz">Examen Público</button>
   <button data-v="interno">Uso interno 🔒</button>
-  <button data-v="admin">Resultados 🔒</button>
 </nav>
-<div class="subnav hidden" id="inSub"><button data-v="tarjetas">Tarjetas (oral)</button><button data-v="banco">Banco completo</button><button data-v="plan">Plan de estudio</button><span class="sp"></span><span class="lock" id="inIdle"></span><button id="inOut" type="button">Cerrar sesión</button></div>
+<div class="subnav hidden" id="inSub"><button data-v="tarjetas">Tarjetas (oral)</button><button data-v="banco">Banco completo</button><button data-v="plan">Plan de estudio</button><button data-v="admin">Resultados</button><span class="sp"></span><span class="lock" id="inIdle"></span><button id="inOut" type="button">Cerrar sesión</button></div>
 <section id="v-interno" class="hidden">
-  <div class="panel"><h2>Uso interno · Tecnosmart</h2><p class="note">Tarjetas de estudio, banco completo de preguntas con respuestas y plan de estudio. Acceso solo para el equipo.</p>
+  <div class="panel"><h2>Uso interno · Tecnosmart</h2><p class="note">Tarjetas de estudio, banco completo, plan de estudio y resultados de los participantes. Acceso solo para el equipo.</p>
     <label>Clave de acceso<input type="password" id="inPw" autocomplete="off"></label>
     <div class="err" id="inErr"></div><div class="row" style="margin-top:8px"><button class="btn" id="inGo" type="button">Entrar</button></div>
     <p class="note" style="margin-top:8px">La sesión se cierra sola tras 15 minutos sin actividad.</p></div>
@@ -199,14 +198,14 @@ img,svg,video{max-width:100%}
       <label>Correo electrónico <span class="req">*</span><input type="email" id="qEmail" placeholder="tu@correo.com" autocomplete="email" inputmode="email"></label>
       <label>Nivel<select id="qLvl"><option value="all">Todos</option><option value="B">Básico</option><option value="M">Medio</option><option value="A">Avanzado</option></select></label><label>Tipo<select id="qTipo"><option value="all">Todos</option><option value="Concepto">Conceptos</option><option value="Caso">Casos prácticos</option></select></label>
       <fieldset class="segs" id="qSeg"><legend>Segmentos (marca los que entran)</legend></fieldset>
-      <label>Preguntas<select id="qCount"><option value="10">10</option><option value="20">20</option><option value="30" selected>30</option><option value="60">60</option><option value="100" data-corp>100</option><option value="999" data-corp>Todas</option></select></label>
+      <label>Cantidad de Preguntas<select id="qCount"><option value="10">10</option><option value="20">20</option><option value="30" selected>30</option><option value="50">50</option><option value="100" data-corp>100</option><option value="999" data-corp>Todas</option></select></label>
       <button class="btn" id="qStart">Empezar examen</button>
     </div>
     <p class="note" id="qCountNote" style="margin-top:2px"></p>
     <div class="err" id="qErr"></div>
     <div class="share"><button class="btn ghost" id="qShare" type="button">🔗 Copiar link de este examen</button><span class="note">Comparte la misma configuración (nivel, tipo, segmentos y cantidad).</span></div>
     <p class="note" id="qPubNote" style="color:var(--acc)"></p>
-    <p class="note" style="margin-top:8px">Las opciones se mezclan en cada intento. Tu avance se guarda después de cada respuesta. <b>Bandera 🚩:</b> si tardas más de 40 s en una pregunta se marca sola como «no estuve seguro»; si sí estabas seguro, <b>tócala para desmarcarla</b>.</p><p class="note">Atajos: teclas <b>1–4</b> para responder y <b>Enter</b> para continuar. Tras 15 minutos sin actividad el examen se cierra y se guarda lo respondido.</p><div class="dbst no" id="dbSt">Guardado: en este navegador.</div>
+    <p class="note" style="margin-top:8px">Las opciones se mezclan en cada intento. Tu avance se guarda después de cada respuesta. <b>Bandera 🚩:</b> si tardas demasiado en una pregunta (35 s; 1 min en las largas) se marca sola como «no estuve seguro»; si sí estabas seguro, <b>tócala para desmarcarla</b>.</p><p class="note">Atajos: teclas <b>1–4</b> para responder y <b>Enter</b> para continuar. Tras 15 minutos sin actividad el examen se cierra y se guarda lo respondido.</p><div class="dbst no" id="dbSt">Guardado: en este navegador.</div>
     <div class="row" style="margin-top:8px"></div>
     <div id="qHist" class="hidden"></div>
   </div>
@@ -1909,14 +1908,14 @@ f.addEventListener("change",cb);f.querySelectorAll(".lnk").forEach(b=>b.onclick=
 const segSel=id=>[...$(id).querySelectorAll("input:checked")].map(i=>i.value);
 
 /* ---------- Navegación ---------- */
-const views=["quiz","interno","tarjetas","banco","plan","admin"],INT=["tarjetas","banco","plan"];let INOK=false;
-function show(v){if(!views.includes(v))v="quiz";if(INT.includes(v)&&!INOK)v="interno";if(v==="interno"&&INOK)v="tarjetas";if(v!=="admin"&&typeof adOpen!=="undefined"&&adOpen){adOpen=false;$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value=""}views.forEach(n=>$("v-"+n).classList.toggle("hidden",n!==v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v||(b.dataset.v==="interno"&&INT.includes(v))));$("inSub").classList.toggle("hidden",!(INOK&&INT.includes(v)));document.querySelectorAll("#inSub button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(location.hash!=="#"+v)history.replaceState(null,"","#"+v)}
+const views=["quiz","interno","tarjetas","banco","plan","admin"],INT=["tarjetas","banco","plan","admin"];let INOK=false;
+function show(v){if(!views.includes(v))v="quiz";if(INT.includes(v)&&!INOK)v="interno";if(v==="interno"&&INOK)v="tarjetas";views.forEach(n=>$("v-"+n).classList.toggle("hidden",n!==v));document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on",b.dataset.v===v||(b.dataset.v==="interno"&&INT.includes(v))));$("inSub").classList.toggle("hidden",!(INOK&&INT.includes(v)));document.querySelectorAll("#inSub button[data-v]").forEach(b=>b.classList.toggle("on",b.dataset.v===v));if(location.hash!=="#"+v)history.replaceState(null,"","#"+v);if(v==="admin"&&INOK&&APIOK&&ADKEY)loadRemote().then(r=>{REMOTE=r||[];if(adOpen)renderAdmin()})}
 document.querySelectorAll("nav button,#inSub button[data-v]").forEach(b=>b.onclick=()=>show(b.dataset.v));
 async function checkKey(v){if(!v)return false;if(APIOK)return await apiAuth(v);return await pwOk(v)}
 async function inEnter(){const v=$("inPw").value;$("inErr").textContent="Verificando…";const ok=await checkKey(v);if(!ok){$("inErr").textContent="Clave incorrecta.";return}
-INOK=true;EDOK=true;$("inPw").value="";$("inErr").textContent="";if($("bLockSt")){$("bLockSt").textContent="🔓 Edición desbloqueada";$("bLock").classList.remove("hidden")}show("tarjetas")}
+INOK=true;EDOK=true;if(APIOK)ADKEY=v;adOpen=true;$("adErr").textContent="";$("adGate").classList.add("hidden");$("adBody").classList.remove("hidden");try{renderAdmin();loadRemote().then(r=>{REMOTE=r||[];if(adOpen)renderAdmin()})}catch(e){}$("inPw").value="";$("inErr").textContent="";if($("bLockSt")){$("bLockSt").textContent="🔓 Edición desbloqueada";$("bLock").classList.remove("hidden")}show("tarjetas")}
 $("inGo").onclick=inEnter;$("inPw").onkeydown=e=>{if(e.key==="Enter")inEnter()};
-function lockInterno(){INOK=false;EDOK=false;EDIT=null;if($("bLockSt")){$("bLockSt").textContent="🔒 Edición bloqueada";$("bLock").classList.add("hidden")}if(INT.includes(location.hash.slice(1)))show("interno")}
+function lockInterno(){INOK=false;EDOK=false;EDIT=null;adOpen=false;ADKEY="";$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value="";if($("bLockSt")){$("bLockSt").textContent="🔒 Edición bloqueada";$("bLock").classList.add("hidden")}if(INT.includes(location.hash.slice(1)))show("interno")}
 $("inOut").onclick=()=>{lockInterno();toast("Sesión de uso interno cerrada")};
 function toast(t){const d=document.createElement("div");d.className="toast";d.setAttribute("role","status");d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
 /* Cierre por inactividad (15 min) */
@@ -1950,7 +1949,7 @@ $("adBody").innerHTML=`<div class="row" style="justify-content:space-between;ali
 ${rk}<h2 style="margin-top:14px">Participantes</h2><div class="row"><input type="text" id="adQ" placeholder="Buscar por nombre o correo" value="${esc(qs)}"><button class="btn ghost" id="adCsv" type="button">Exportar CSV (copiar)</button></div>
 <textarea id="adOut" rows="4" class="hidden" readonly style="margin-top:8px"></textarea>
 ${h.length?`<table style="margin-top:10px"><tr><th>Fecha</th><th>Participante</th><th>Filtro</th><th>Puntaje</th><th>Tiempo</th><th>★</th><th></th></tr>${h.map(r=>`<tr><td>${new Date(r.d).toLocaleString("es-EC",{dateStyle:"short",timeStyle:"short"})}<br><span class="note">${esc(r.src||"navegador")}${r.st==="en curso"?" · en curso ("+r.t+"/"+(r.tq||r.t)+")":""}</span></td><td>${esc(r.n)}<br><span class="note">${esc(r.e)}</span></td><td>${esc(r.f)}</td><td><b>${r.p}%</b> (${r.c}/${r.t})</td><td>${fmtT(r.dur||0)}</td><td>${stars(r.rating)}</td><td><button class="btn ghost adD" data-id="${r.id}" type="button">Ver</button></td></tr><tr class="hidden" id="ad-${r.id}"><td colspan="7"><b>Expectativa:</b> ${esc(r.exp||"—")}<br><b>Comentario:</b> ${esc(r.comment||"—")}<br><b>Sugerencias:</b> ${(r.sug&&r.sug.length?r.sug.map(esc).join(" · "):"—")}<br><b>Por nivel:</b> ${["B","M","A"].filter(k=>r.by&&r.by[k]).map(k=>LV[k]+" "+r.by[k].o+"/"+r.by[k].t).join(" · ")||"—"}<br><b>Falladas:</b> ${(r.miss||[]).map(m=>"P"+m.n).join(", ")||"ninguna"}<br><b>Marcadas:</b> ${(r.flags||[]).map(f=>"P"+f.n+(f.auto?" (auto)":"")).join(", ")||"ninguna"}<br><b>Refutaciones:</b> ${(r.refs||[]).map(f=>"P"+f.n+": "+esc(f.c)).join(" · ")||"ninguna"}</td></tr>`).join("")}</table>`:`<p class="note" style="margin-top:12px">Aún no hay tests en este navegador.</p>`}`;
-$("adLock").onclick=()=>{adOpen=false;$("adBody").classList.add("hidden");$("adGate").classList.remove("hidden");$("adPw").value=""};
+$("adLock").onclick=()=>{lockInterno();toast("Sesión de uso interno cerrada")};
 $("adQ").oninput=()=>{const v=$("adQ").value;renderAdmin();const e=$("adQ");e.focus();e.setSelectionRange(v.length,v.length)};
 $("adCsv").onclick=()=>{const t=adCsv(all);const o=$("adOut");o.classList.remove("hidden");o.value=t;o.select();try{navigator.clipboard.writeText(t)}catch(x){}};
 document.querySelectorAll(".adD").forEach(b=>b.onclick=()=>$("ad-"+b.dataset.id).classList.toggle("hidden"));
@@ -1989,7 +1988,7 @@ function mergedPeople(){const m={};const rank=r=>(r.st==="en curso"?0:2)+(r.rati
 /* ---------- Quiz ---------- */
 let run=null,tmr=null;const strip=h=>String(h).replace(/<[^>]+>/g,"").replace(/&amp;/g,"&");const fmtT=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
 const MAILRX=/^[^\s@<>"]+@[^\s@<>"]+\.[a-z]{2,}$/i,TSRX=/@tecnosmart\.com\.ec$/i,ENDPOINT="";
-function updateCounts(){const corp=TSRX.test(($("qEmail").value||"").trim().toLowerCase());const sel=$("qCount");sel.querySelectorAll("option[data-corp]").forEach(o=>{o.hidden=!corp;o.disabled=!corp});if(!corp&&(sel.value==="100"||sel.value==="999"))sel.value="60";$("qCountNote").textContent=corp?"":"Para 100 preguntas o el banco completo, usa tu correo @tecnosmart.com.ec."}
+function updateCounts(){const corp=TSRX.test(($("qEmail").value||"").trim().toLowerCase());const sel=$("qCount");sel.querySelectorAll("option[data-corp]").forEach(o=>{o.hidden=!corp;o.disabled=!corp});if(!corp&&(sel.value==="100"||sel.value==="999"))sel.value="50";$("qCountNote").textContent=""}
 const wc=t=>(t.trim().match(/\S+/g)||[]).length;
 const people=()=>store.get("ts_people",[]);
 function savePerson(r){const a=people(),i=a.findIndex(x=>x.id===r.id);if(i>=0)a[i]=r;else a.push(r);store.set("ts_people",a)}
@@ -2013,14 +2012,15 @@ $("qSetup").classList.add("hidden");$("qRun").classList.remove("hidden");renderQ
 document.addEventListener("keydown",e=>{if(!run||run.done||$("qRun").classList.contains("hidden"))return;const tg=e.target.tagName;if(tg==="TEXTAREA"||tg==="INPUT"||tg==="SELECT")return;
  if(!run.ans&&/^[1-4]$/.test(e.key)){const b=$("qRun").querySelector('.opt[data-k="'+e.key+'"]');if(b){e.preventDefault();b.click()}}
  else if(run.ans&&e.key==="Enter"&&$("qNext")){e.preventDefault();$("qNext").click()}});
+function flagSecs(x){const w=(String(x.q)+" "+String(x.o[0])).replace(/<[^>]*>/g," ").split(/\s+/).filter(Boolean).length;return w>60?60:35}
 function renderQ(){const x=run.pool[run.i];const opts=shuffle(x.o.map((t,j)=>({t,c:j===0})));
 $("qRun").innerHTML=`<div class="qhead"><span class="qnum">Pregunta ${run.i+1} de ${run.pool.length} · P${x.n}</span><span class="qnum" id="qTimer">⏱ ${fmtT(Math.round((Date.now()-run.t0)/1000))}</span><span class="qnum">✓ ${run.ok}${run.streak>=3?` · <span class="streak">🔥 racha ${run.streak}</span>`:""}</span></div>
 <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${run.pool.length}" aria-valuenow="${run.i}"><i style="width:${run.i/run.pool.length*100}%"></i></div><div>${chips(x)}</div><div class="qtext">${x.q}</div><div class="row" style="margin:6px 0;align-items:center"><button class="btn ghost" id="qFlag" type="button"></button><span class="note" id="qFlagNote"></span></div>
 <div class="opts">${opts.map((o,j)=>`<button class="opt" data-c="${o.c?1:0}" data-k="${j+1}">${String.fromCharCode(65+j)}) ${o.t}</button>`).join("")}</div><div id="qExp"></div><div id="qRefBox"></div>`;
-const n=x.n;clearTimeout(run.at);run.q0=Date.now();run.ans=false;
-const paintF=()=>{const f=run.fl[n],on=!!(f&&f.m);$("qFlag").classList.toggle("on",on);$("qFlag").textContent=on?"🚩 Marcada: no estuve seguro (quitar)":"🚩 En esta pregunta no estuve seguro";$("qFlagNote").textContent=on&&f.auto?"Se marcó sola por pasar de 40 s. Si sí estabas seguro, toca la bandera para desmarcarla.":on?"Toca la bandera otra vez para desmarcarla.":""};paintF();
+const n=x.n;clearTimeout(run.at);run.q0=Date.now();run.ans=false;const FT=flagSecs(x);
+const paintF=()=>{const f=run.fl[n],on=!!(f&&f.m);$("qFlag").classList.toggle("on",on);$("qFlag").textContent=on?"🚩 Marcada: no estuve seguro (quitar)":"🚩 En esta pregunta no estuve seguro";$("qFlagNote").textContent=on&&f.auto?"Se marcó sola por pasar de "+FT+" s. Si sí estabas seguro, toca la bandera para desmarcarla.":on?"Toca la bandera otra vez para desmarcarla.":""};paintF();
 $("qFlag").onclick=()=>{const f=run.fl[n];run.fl[n]=(f&&f.m)?{m:false,off:true}:{m:true,auto:false,sec:Math.round((Date.now()-run.q0)/1000)};paintF();if(run.ans)saveProgress()};
-run.at=setTimeout(()=>{if(!run.ans&&!(run.fl[n]&&run.fl[n].off)&&!(run.fl[n]&&run.fl[n].m)){run.fl[n]={m:true,auto:true,sec:40};paintF()}},40000);
+run.at=setTimeout(()=>{if(!run.ans&&!(run.fl[n]&&run.fl[n].off)&&!(run.fl[n]&&run.fl[n].m)){run.fl[n]={m:true,auto:true,sec:FT};paintF()}},FT*1000);
 $("qRun").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{const good=b.dataset.c==="1";if(good){run.ok++;run.streak++;run.best=Math.max(run.best,run.streak)}else{run.miss.push(x);run.streak=0}run.ans=true;clearTimeout(run.at);run.qt[n]=Math.round((Date.now()-run.q0)/1000);run.res[n]=good;saveProgress();
 $("qRun").querySelectorAll(".opt").forEach(o=>{o.disabled=true;if(o.dataset.c==="1")o.classList.add("ok")});if(good)b.classList.add("pop");else b.classList.add("bad","shake");
 $("qExp").innerHTML=`<div class="exp"><b>${good?"¡Correcto!":"Respuesta correcta: "+x.o[0]}</b><br>${x.e}</div><div class="row" style="margin-top:12px;justify-content:flex-end"><button class="btn ghost" id="qRef" type="button"></button>${(run.pool.length>10&&(run.i+1)>=Math.ceil(run.pool.length*0.6)&&run.i+1<run.pool.length)?`<button class="btn ghost" id="qQuit">Terminar</button>`:""}<button class="btn" id="qNext">${run.i+1<run.pool.length?"Siguiente →":"Ver resultado"}</button></div>`;
@@ -2048,12 +2048,12 @@ function shareURL(cfg){const base=/github\.io$/.test(location.hostname)?location
 async function copyLink(url,btn){let ok=false;try{await navigator.clipboard.writeText(url);ok=true}catch(e){}
  if(ok){toast("Link copiado: compártelo por WhatsApp o correo");return}const box=document.createElement("div");box.className="share";box.innerHTML='<input type="text" readonly aria-label="Link del examen">';box.firstChild.value=url;btn.parentNode.after(box);box.firstChild.select();toast("Selecciona y copia el link")}
 function curCfg(){return {l:$("qLvl").value,sg:segSel("qSeg"),kt:$("qTipo").value,c:+$("qCount").value}}
-const PUBCOUNTS=["10","20","30","60"];
+const PUBCOUNTS=["10","20","30","50"];
 function gateCounts(){const corp=TSRX.test($("qEmail").value.trim().toLowerCase());const sel=$("qCount");
  [...sel.options].forEach(o=>{const pub=PUBCOUNTS.includes(o.value);o.hidden=!corp&&!pub;o.disabled=!corp&&!pub});
- if(!corp&&!PUBCOUNTS.includes(sel.value))sel.value="60";
- const note=$("qPubNote");if(note)note.textContent=corp?"":"Con un correo externo puedes rendir 10, 20, 30 o 60 preguntas. El examen completo es para el equipo de Tecnosmart."}
-function applyShared(){const u=new URLSearchParams(location.search);if(![...u.keys()].length)return;const l=u.get("nivel"),sg=(u.get("seg")||"").split(",").filter(x=>SEGS.includes(x)),kt=u.get("tipo"),c=u.get("n");
+ if(!corp&&!PUBCOUNTS.includes(sel.value))sel.value="50";
+ const note=$("qPubNote");if(note)note.textContent=""}
+function applyShared(){const u=new URLSearchParams(location.search);if(![...u.keys()].length)return;let l=u.get("nivel"),sg=(u.get("seg")||"").split(",").filter(x=>SEGS.includes(x)),kt=u.get("tipo"),c=u.get("n");if(c==="60")c="50";
  if(["B","M","A"].includes(l))$("qLvl").value=l;if(["Concepto","Caso"].includes(kt))$("qTipo").value=kt;if(c&&[...$("qCount").options].some(o=>o.value===c))$("qCount").value=c;
  if(sg.length)$("qSeg").querySelectorAll("input").forEach(i=>i.checked=sg.includes(i.value));
  const desc=[l&&LV[l]?LV[l]:"Todos los niveles",kt==="Caso"?"Casos prácticos":kt==="Concepto"?"Conceptos":"",sg.length?sg.join(", "):"",c?(c==="999"?"todas las preguntas":c+" preguntas"):""].filter(Boolean).join(" · ");
