@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Conector API para distribuidores · Guía de referencia</title>
+<style>
+:root{
+  --bg:#f5f7fa; --surface:#fff; --surface-2:#f1f5f9; --text:#0f172a; --muted:#5b6b82; --border:#e2e8f0;
+  --brand:#0b3d91; --brand-2:#1565c0; --accent:#0f766e; --code-bg:#0f172a; --code-text:#e2e8f0;
+  --must:#b91c1c; --must-soft:#fee2e2; --nice:#0f766e; --nice-soft:#ccfbf1; --warn-soft:#fef3c7; --warn:#92400e;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1220; --surface:#111a2b; --surface-2:#0f1726; --text:#e2e8f0; --muted:#94a3b8; --border:#1f2a3d;
+    --brand:#93c5fd; --brand-2:#60a5fa; --accent:#2dd4bf; --code-bg:#020617; --code-text:#e2e8f0;
+    --must:#f87171; --must-soft:#3b1414; --nice:#2dd4bf; --nice-soft:#134e4a; --warn-soft:#3a2a0a; --warn:#fbbf24;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1220; --surface:#111a2b; --surface-2:#0f1726; --text:#e2e8f0; --muted:#94a3b8; --border:#1f2a3d;
+  --brand:#93c5fd; --brand-2:#60a5fa; --accent:#2dd4bf; --code-bg:#020617; --code-text:#e2e8f0;
+  --must:#f87171; --must-soft:#3b1414; --nice:#2dd4bf; --nice-soft:#134e4a; --warn-soft:#3a2a0a; --warn:#fbbf24;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.hero{background:linear-gradient(90deg,#0b3d91,#1565c0);color:#fff}
+.hero-inner{max-width:980px;margin:0 auto;padding:36px 16px 28px}
+.hero .eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.85;margin:0}
+.hero h1{font-size:34px;line-height:1.15;margin:6px 0 10px;letter-spacing:-.01em}
+.hero p{margin:0;max-width:720px;opacity:.92}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.meta span{background:rgb(255 255 255 / .15);border:1px solid rgb(255 255 255 / .25);padding:3px 10px;border-radius:999px;font-size:13px}
+main{max-width:980px;margin:0 auto;padding:0 16px 64px}
+nav.toc{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:-18px 0 24px;position:relative;box-shadow:0 2px 10px rgb(15 23 42 / .06)}
+nav.toc h2{font-size:14px;margin:0 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}
+nav.toc a{color:var(--text);text-decoration:none}
+nav.toc a:hover{color:var(--brand-2);text-decoration:underline}
+section.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 24px;margin:0 0 18px}
+h2.sec{font-size:22px;margin:0 0 12px;letter-spacing:-.01em;scroll-margin-top:16px}
+h3{font-size:17px;margin:20px 0 8px}
+p{margin:0 0 12px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+a{color:var(--brand-2)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88em;background:var(--surface-2);border:1px solid var(--border);padding:1px 5px;border-radius:5px}
+pre{position:relative;background:var(--code-bg);color:var(--code-text);border-radius:10px;padding:16px;overflow-x:auto;font:13.5px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:10px 0 16px}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:inherit}
+.copy{position:absolute;top:8px;right:8px;font:12px system-ui,sans-serif;background:rgb(255 255 255 / .1);color:#e2e8f0;border:1px solid rgb(255 255 255 / .2);border-radius:6px;padding:3px 9px;cursor:pointer}
+.copy:hover{background:rgb(255 255 255 / .2)}
+.table-wrap{overflow-x:auto;margin:8px 0 16px}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface-2);font-size:13px;color:var(--muted);font-weight:600;white-space:nowrap}
+td code{white-space:nowrap}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.must{background:var(--must-soft);color:var(--must)}
+.nice{background:var(--nice-soft);color:var(--nice)}
+.method{display:inline-block;font:700 11px ui-monospace,Menlo,monospace;padding:2px 7px;border-radius:5px;margin-right:6px;color:#fff;background:#2563eb}
+.method.post{background:#0f766e}.method.put{background:#b45309}
+.callout{border-left:4px solid var(--brand-2);background:var(--surface-2);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0 16px}
+.callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.box{border:1px solid var(--border);border-radius:10px;padding:14px 16px;background:var(--surface-2)}
+.box h3{margin-top:0}
+ul.check{list-style:none;padding:0;margin:0 0 12px}
+ul.check li{padding:4px 0 4px 28px;position:relative}
+ul.check li::before{content:"☐";position:absolute;left:4px;top:3px;color:var(--muted)}
+.letter{background:var(--surface-2);border:1px dashed var(--border);border-radius:10px;padding:18px 20px}
+.ph{background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:0 4px}
+footer{max-width:980px;margin:0 auto;padding:0 16px 40px;color:var(--muted);font-size:13px}
+.toolbar{display:flex;justify-content:flex-end;gap:8px;margin:12px 0}
+.btn{font:14px system-ui,sans-serif;border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:8px;padding:7px 14px;cursor:pointer}
+.btn:hover{border-color:var(--brand-2)}
+@media (max-width:640px){
+  .hero h1{font-size:26px} nav.toc ol{columns:1} section.card{padding:18px 16px}
+}
+@media print{
+  body{background:#fff;font-size:12pt} header.hero{background:#0b3d91 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .copy,.toolbar{display:none} section.card{break-inside:avoid-page;border-color:#ccc} nav.toc{box-shadow:none;margin-top:12px}
+  pre{white-space:pre-wrap;word-break:break-word}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">TECNOSMART · Guayaquil, Ecuador</p>
+    <h1>Conector API para distribuidores</h1>
+    <p>Guía de referencia para que nuestros proveedores habiliten una conexión segura con la que Tecnosmart pueda consultar
+      <b>precios, stock por bodega y promociones</b> y <b>registrar pedidos</b> desde su sistema.</p>
+    <div class="meta"><span>Versión 1.0</span><span>Noviembre 2026</span><span>REST · JSON · HTTPS</span><span>Tiempo estimado de implementación: 2 a 4 semanas</span></div>
+  </div>
+</header>
+
+<main>
+  <nav class="toc" aria-label="Contenido">
+    <h2>Contenido</h2>
+    <ol>
+      <li><a href="#solicitud">Solicitud de acceso (carta)</a></li>
+      <li><a href="#resumen">Qué necesitamos, en una página</a></li>
+      <li><a href="#principios">Principios técnicos</a></li>
+      <li><a href="#autenticacion">Autenticación y límites</a></li>
+      <li><a href="#producto">Formato del producto</a></li>
+      <li><a href="#endpoints">Endpoints</a></li>
+      <li><a href="#ordenes">Creación de pedidos</a></li>
+      <li><a href="#errores">Errores</a></li>
+      <li><a href="#seguridad">Seguridad y pruebas</a></li>
+      <li><a href="#entregables">Lo que pedimos que nos entreguen</a></li>
+      <li><a href="#claude">Hágalo con Claude (prompt listo)</a></li>
+      <li><a href="#aceptacion">Pruebas de aceptación</a></li>
+    </ol>
+  </nav>
+
+  <div class="toolbar"><button class="btn" type="button" onclick="window.print()">Imprimir / guardar PDF</button></div>
+
+  <!-- 1 -->
+  <section class="card" id="solicitud">
+    <h2 class="sec">1. Solicitud de acceso</h2>
+    <p class="muted small">Texto de ejemplo para enviar por correo a su asesor comercial. Reemplace lo resaltado.</p>
+    <div class="letter">
+      <p><b>Asunto:</b> Solicitud de acceso API para consulta de inventario y pedidos – TECNOSMART</p>
+      <p>Estimado(a) <span class="ph">[nombre del asesor]</span>:</p>
+      <p>En TECNOSMART estamos automatizando la atención a nuestros clientes por WhatsApp, Instagram, Facebook y TikTok,
+        incluso fuera del horario de oficina. Para ofrecer sus productos con precio y disponibilidad reales —y comprarles
+        más rápido— solicitamos acceso a una <b>API de consulta de inventario y registro de pedidos</b> con nuestro nivel de precio.</p>
+      <p>Adjuntamos esta guía de referencia con el formato que nos permitiría integrarnos en pocos días. No es obligatorio
+        seguirla al pie de la letra: si ustedes ya tienen una API, nos adaptamos a ella.</p>
+      <p><b>Nuestros compromisos:</b></p>
+      <ul>
+        <li>Usar la clave solo desde nuestros servidores, nunca en páginas públicas.</li>
+        <li>No publicar sus precios de costo; mostramos a nuestros clientes nuestros precios de venta.</li>
+        <li>Respetar el límite de consultas que ustedes definan.</li>
+        <li>Mantener la confidencialidad de la información y avisar de inmediato si una clave se compromete.</li>
+      </ul>
+      <p>Quedamos atentos a su respuesta y al contacto de su área técnica.</p>
+      <p>Saludos cordiales,<br><span class="ph">[Nombre]</span> · Gerente General · TECNOSMART<br>
+        RUC <span class="ph">[RUC]</span> · <span class="ph">[teléfono]</span> · <span class="ph">[correo]</span> · www.tecnosmart.com.ec</p>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section class="card" id="resumen">
+    <h2 class="sec">2. Qué necesitamos, en una página</h2>
+    <div class="grid2">
+      <div class="box">
+        <h3><span class="tag must">IMPRESCINDIBLE</span></h3>
+        <ul>
+          <li>Buscar productos por <b>part number</b>, marca o descripción.</li>
+          <li><b>Precio de nuestro nivel</b> (sin IVA) y % de IVA.</li>
+          <li><b>Stock disponible por bodega</b> (Guayaquil / Quito u otras), descontando lo reservado.</li>
+          <li>Consultar precio y stock de <b>varios códigos a la vez</b>.</li>
+          <li><b>Catálogo completo paginado</b> para sincronizar.</li>
+          <li>Fecha y hora de la última actualización de cada dato.</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3><span class="tag nice">MUY DESEABLE</span></h3>
+        <ul>
+          <li><b>Crear pedidos</b> con nuestro número de referencia (sin duplicados).</li>
+          <li><b>Consultar estado</b> del pedido y número de factura.</li>
+          <li>Promociones vigentes y unidades restantes a ese precio.</li>
+          <li>Peso con empaque (para cotizar flete) e imagen del producto.</li>
+          <li>Mercadería <b>en tránsito</b> con fecha estimada de llegada.</li>
+          <li>Una <b>clave de pruebas</b> que no cree pedidos reales.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="card" id="principios">
+    <h2 class="sec">3. Principios técnicos</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Tema</th><th>Recomendación</th></tr>
+      <tr><td>Estilo</td><td>REST sobre <b>HTTPS</b>, respuestas en <b>JSON UTF-8</b>.</td></tr>
+      <tr><td>URL base</td><td>Versionada, por ejemplo <code>https://api.su-empresa.com/api/v1</code>. Cambios incompatibles → <code>/v2</code>.</td></tr>
+      <tr><td>Clave del producto</td><td>El <b>part number del fabricante</b> como <code>codigo</code> (es lo que cruzamos con nuestro ERP). Si usan código interno, inclúyanlo también como <code>codigo_interno</code>.</td></tr>
+      <tr><td>Precios</td><td>Números decimales (no texto), <b>sin IVA</b>, en USD, con el nivel de precio del cliente dueño de la clave.</td></tr>
+      <tr><td>Fechas</td><td>ISO 8601 con zona horaria: <code>2026-11-27T08:30:00-05:00</code>.</td></tr>
+      <tr><td>Frescura</td><td>Datos actualizados al menos cada hora; campo <code>actualizado</code> en cada producto.</td></tr>
+      <tr><td>Paginación</td><td><code>page</code> + <code>limit</code>, respuesta con <code>total</code>, <code>pages</code>, <code>has_next</code>.</td></tr>
+      <tr><td>CORS <span class="tag nice">opcional</span></td><td>Permitir el encabezado <code>X-API-Key</code> facilita herramientas internas en el navegador. No es imprescindible si solo consultamos desde servidor.</td></tr>
+    </table></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="card" id="autenticacion">
+    <h2 class="sec">4. Autenticación y límites</h2>
+    <p>Una <b>API key por cliente</b>, enviada en el encabezado <code>X-API-Key</code> de cada consulta:</p>
+<pre><code>curl -H "X-API-Key: ck_su_clave" "https://api.su-empresa.com/api/v1/cuenta"</code></pre>
+    <ul>
+      <li><b>Vencimiento:</b> la clave puede tener fecha de vencimiento, visible en <code>GET /cuenta</code>. Al vencer: <code>401</code> con mensaje claro.</li>
+      <li><b>Permisos separados:</b> lectura (consultas) y escritura (pedidos). Idealmente, dos claves distintas.</li>
+      <li><b>Límite sugerido:</b> 60 consultas por minuto; al superarlo, <code>429</code> con encabezado <code>Retry-After</code>.</li>
+      <li><b>Rotación:</b> poder emitir una clave nueva y revocar la anterior sin cortar el servicio.</li>
+    </ul>
+  </section>
+
+  <!-- 5 -->
+  <section class="card" id="producto">
+    <h2 class="sec">5. Formato del producto</h2>
+    <p>Todas las consultas devuelven los productos con la misma estructura. Ejemplo con datos ficticios:</p>
+<pre><code>{
+  "codigo": "ABC123XYZ",                  // part number del fabricante
+  "codigo_interno": "0000041234",
+  "nombre": "NOTEBOOK MARCA-X 15.6\" RYZEN 5 16GB 512GB SSD",
+  "marca": "MARCA-X",
+  "categoria": "Notebooks",
+  "ean": "0195000000000",
+  "precio": 545.00,                       // su nivel, sin IVA
+  "promocion": { "precio": 512.00, "unidades": 40, "vence": "2026-12-15" },
+  "precio_final": 512.00,                 // el que aplica hoy (promoción o normal)
+  "iva_pct": 15,
+  "peso_kg": 2.6,                         // con empaque; null si no está registrado
+  "garantia_meses": 12,
+  "stock": {
+    "guayaquil": { "stock": 120, "reservado": 10, "disponible": 110 },
+    "quito":     { "stock": 15,  "reservado": 0,  "disponible": 15 },
+    "disponible_total": 125
+  },
+  "en_transito": { "cantidad": 50, "llegada_estimada": "2026-12-05" },
+  "imagen": "https://api.su-empresa.com/img/ABC123XYZ.jpg",
+  "url": "https://www.su-empresa.com/producto/ABC123XYZ",
+  "actualizado": "2026-11-27T08:30:00-05:00"
+}</code></pre>
+    <div class="table-wrap"><table>
+      <tr><th>Campo</th><th>Tipo</th><th></th><th>Descripción</th></tr>
+      <tr><td><code>codigo</code></td><td>texto</td><td><span class="tag must">req.</span></td><td>Part number del fabricante.</td></tr>
+      <tr><td><code>nombre</code>, <code>marca</code>, <code>categoria</code></td><td>texto</td><td><span class="tag must">req.</span></td><td>Descripción comercial, marca y categoría.</td></tr>
+      <tr><td><code>precio</code>, <code>precio_final</code></td><td>número</td><td><span class="tag must">req.</span></td><td>Sin IVA, nivel del cliente. <code>precio_final</code> incluye la promoción si aplica.</td></tr>
+      <tr><td><code>iva_pct</code></td><td>número</td><td><span class="tag must">req.</span></td><td>15 o 0 según el producto.</td></tr>
+      <tr><td><code>stock.*.disponible</code></td><td>entero</td><td><span class="tag must">req.</span></td><td>Stock − reservado, por bodega o ciudad.</td></tr>
+      <tr><td><code>actualizado</code></td><td>fecha</td><td><span class="tag must">req.</span></td><td>Cuándo se actualizó el precio/stock.</td></tr>
+      <tr><td><code>promocion</code></td><td>objeto | null</td><td><span class="tag nice">desea.</span></td><td>Precio, unidades restantes y vencimiento.</td></tr>
+      <tr><td><code>peso_kg</code>, <code>imagen</code>, <code>ean</code></td><td>varios</td><td><span class="tag nice">desea.</span></td><td>Para cotizar flete y mostrar el producto.</td></tr>
+      <tr><td><code>en_transito</code></td><td>objeto | null</td><td><span class="tag nice">desea.</span></td><td>Cantidad y fecha estimada de llegada.</td></tr>
+    </table></div>
+  </section>
+
+  <!-- 6 -->
+  <section class="card" id="endpoints">
+    <h2 class="sec">6. Endpoints</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Método y ruta</th><th></th><th>Para qué</th></tr>
+      <tr><td><span class="method">GET</span><code>/cuenta</code></td><td><span class="tag must">req.</span></td><td>Cliente, RUC, nivel de precio, vencimiento de la clave, permisos y bodegas visibles.</td></tr>
+      <tr><td><span class="method">GET</span><code>/productos?q=</code></td><td><span class="tag must">req.</span></td><td>Búsqueda por código, nombre, marca o categoría. Parámetros: <code>q</code>, <code>solo_disponibles</code>, <code>page</code>, <code>limit</code> (máx. 100).</td></tr>
+      <tr><td><span class="method">GET</span><code>/productos/{codigo}</code></td><td><span class="tag nice">desea.</span></td><td>Ficha completa: descripción técnica, imágenes adicionales.</td></tr>
+      <tr><td><span class="method post">POST</span><code>/stock/bulk</code></td><td><span class="tag must">req.</span></td><td>Precio y stock de hasta 200 códigos. Códigos inexistentes con <code>"encontrado": false</code> (no error).</td></tr>
+      <tr><td><span class="method">GET</span><code>/catalogo</code></td><td><span class="tag must">req.</span></td><td>Todo el inventario paginado (hasta 500 por página). Ideal: <code>actualizado_desde</code> para traer solo lo que cambió.</td></tr>
+      <tr><td><span class="method">GET</span><code>/categorias</code></td><td><span class="tag nice">desea.</span></td><td>Categorías y marcas con cantidad de productos.</td></tr>
+      <tr><td><span class="method">GET</span><code>/direcciones</code></td><td><span class="tag nice">desea.</span></td><td>Nuestras direcciones de entrega registradas.</td></tr>
+      <tr><td><span class="method post">POST</span><code>/ordenes</code></td><td><span class="tag nice">desea.</span></td><td>Crear pedido (ver sección 7).</td></tr>
+      <tr><td><span class="method">GET</span><code>/ordenes/{referencia}</code></td><td><span class="tag nice">desea.</span></td><td>Estado del pedido, factura y guía.</td></tr>
+      <tr><td><span class="method">GET</span><code>/ordenes?dias=30</code></td><td><span class="tag nice">desea.</span></td><td>Pedidos recientes.</td></tr>
+    </table></div>
+    <h3>Ejemplos</h3>
+<pre><code>GET /api/v1/productos?q=notebook%20ryzen&amp;solo_disponibles=true&amp;limit=20
+→ { "productos": [ ... ], "total": 12, "page": 1, "limit": 20, "pages": 1, "has_next": false }
+
+POST /api/v1/stock/bulk
+{ "codigos": ["ABC123XYZ", "DEF456", "NOEXISTE"] }
+→ { "resultados": [ { "encontrado": true, "codigo": "ABC123XYZ", ... },
+                    { "encontrado": false, "codigo": "NOEXISTE", "stock": { "disponible_total": 0 } } ],
+    "total": 3 }</code></pre>
+  </section>
+
+  <!-- 7 -->
+  <section class="card" id="ordenes">
+    <h2 class="sec">7. Creación de pedidos</h2>
+    <p><span class="method post">POST</span><code>/ordenes</code> registra un pedido igual que una compra en su web: lo procesa su asesor y se factura a nuestro nombre.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Campo</th><th>Descripción</th></tr>
+      <tr><td><code>referencia</code></td><td><b>Nuestro número de pedido</b> (único). Si se reenvía la misma referencia —por ejemplo, tras un corte de conexión— se devuelve la misma orden con <code>"repetida": true</code>; <b>nunca se duplica</b>.</td></tr>
+      <tr><td><code>items[]</code></td><td><code>codigo</code>, <code>cantidad</code> y opcional <code>precio_esperado</code>: si el precio actual es mayor, se rechaza con <code>409</code> e informa el precio nuevo.</td></tr>
+      <tr><td><code>entrega.tipo</code></td><td><code>retiro_gye</code> · <code>retiro_uio</code> · <code>envio</code> (con <code>direccion_id</code>) · <code>dropshipping</code> (opcional: despacho directo a nuestro cliente con nuestra guía).</td></tr>
+      <tr><td><code>nota</code></td><td>Texto libre (por ejemplo, quién retira), hasta 200 caracteres.</td></tr>
+    </table></div>
+<pre><code>POST /api/v1/ordenes
+{
+  "referencia": "TS-261127-0915",
+  "items": [ { "codigo": "ABC123XYZ", "cantidad": 2, "precio_esperado": 512.00 } ],
+  "entrega": { "tipo": "retiro_gye" },
+  "nota": "Retira Juan Pérez, C.I. 0900000000"
+}
+
+201 Created
+{ "referencia": "TS-261127-0915", "orden": "1500001", "estado": "registrada", "repetida": false,
+  "items": [ { "codigo": "ABC123XYZ", "cantidad": 2, "precio": 512.00 } ],
+  "subtotal": 1024.00, "iva_estimado": 153.60, "total_estimado": 1177.60 }</code></pre>
+    <h3>Estados sugeridos</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Estado</th><th>Significado</th></tr>
+      <tr><td><code>registrada</code></td><td>Recibida, en preparación.</td></tr>
+      <tr><td><code>retenida</code></td><td>En revisión de crédito o cobranza.</td></tr>
+      <tr><td><code>facturada</code></td><td>Facturada; <code>estado_detalle</code> con el número de factura.</td></tr>
+      <tr><td><code>despachada</code></td><td>Salió de bodega; con fecha y número de guía.</td></tr>
+      <tr><td><code>anulada</code></td><td>No se despachará.</td></tr>
+    </table></div>
+  </section>
+
+  <!-- 8 -->
+  <section class="card" id="errores">
+    <h2 class="sec">8. Errores</h2>
+    <p>Siempre con un JSON <code>{"detail": "mensaje claro en español"}</code>:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Código</th><th>Cuándo</th></tr>
+      <tr><td><code>401</code></td><td>Falta la clave, es incorrecta, está desactivada o venció (el mensaje dice cuál).</td></tr>
+      <tr><td><code>403</code></td><td>La clave no tiene permiso para esa acción (por ejemplo, crear pedidos).</td></tr>
+      <tr><td><code>404</code></td><td>El producto o pedido no existe.</td></tr>
+      <tr><td><code>409</code></td><td>Sin stock suficiente o el precio cambió (el detalle indica disponible/precio actual).</td></tr>
+      <tr><td><code>422</code></td><td>Datos inválidos (el detalle indica qué campo).</td></tr>
+      <tr><td><code>429</code></td><td>Superó el límite de consultas; reintentar luego de <code>Retry-After</code>.</td></tr>
+      <tr><td><code>500 / 502</code></td><td>Error temporal; se puede reintentar.</td></tr>
+    </table></div>
+  </section>
+
+  <!-- 9 -->
+  <section class="card" id="seguridad">
+    <h2 class="sec">9. Seguridad y pruebas</h2>
+    <ul>
+      <li><b>Clave de pruebas (sandbox):</b> mismos datos de consulta, pero <code>POST /ordenes</code> responde como si creara el pedido sin crearlo realmente. Nos permite probar sin riesgo.</li>
+      <li><b>Claves separadas</b> para lectura y para pedidos; revocables de inmediato.</li>
+      <li><b>Lista de IPs permitidas</b> <span class="tag nice">opcional</span>: podemos darles la IP fija de nuestro servidor.</li>
+      <li><b>Registro de auditoría:</b> qué clave hizo qué y cuándo, sobre todo en pedidos.</li>
+      <li><b>Nunca</b> enviar claves por chat abierto: preferible un enlace de un solo uso o el portal del cliente.</li>
+    </ul>
+    <div class="callout warn"><b>Importante:</b> los precios que expone la API son costos de distribuidor. Tecnosmart se compromete a no mostrarlos al público.</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="card" id="entregables">
+    <h2 class="sec">10. Lo que pedimos que nos entreguen</h2>
+    <ul class="check">
+      <li>URL base de la API y documentación (PDF o página web).</li>
+      <li>API key de <b>pruebas</b> y API key de <b>producción</b> (con su fecha de vencimiento).</li>
+      <li>Límite de consultas por minuto acordado.</li>
+      <li>Frecuencia de actualización de precios y stock.</li>
+      <li>Nombres de bodegas y qué significa cada una (retiro inmediato o requiere traslado, y tiempo).</li>
+      <li>Permisos habilitados: consultas, pedidos, dropshipping.</li>
+      <li>Contacto técnico (nombre, correo, WhatsApp) para soporte de la integración.</li>
+    </ul>
+  </section>
+
+  <!-- 11 -->
+  <section class="card" id="claude">
+    <h2 class="sec">11. Hágalo con Claude (prompt listo)</h2>
+    <p>Si su equipo usa <b>Claude</b> (claude.ai o Claude Code), puede pegar este texto para que le ayude a construir la API
+      sobre su ERP y a redactar la documentación para sus clientes. Complete lo que está entre corchetes.</p>
+<pre id="prompt"><button class="copy" type="button" data-target="prompt">Copiar</button><code>Actúa como arquitecto de software. Somos [NOMBRE DE LA EMPRESA], distribuidor mayorista de tecnología en Ecuador.
+Nuestro ERP es [SAP Business One / Odoo / Microsoft Dynamics / sistema propio] con base de datos [SQL Server / PostgreSQL / otra].
+
+Queremos publicar una API REST de solo lectura + pedidos para nuestros clientes distribuidores, siguiendo la guía de
+referencia "Conector API para distribuidores" (adjunta). Requisitos:
+
+1. Stack: [Python FastAPI / Node.js / .NET], desplegable en Docker detrás de HTTPS.
+2. Autenticación por API key en el encabezado X-API-Key, una por cliente, con: nivel de precio, fecha de vencimiento,
+   permisos (consultas / pedidos / dropshipping) y bodegas visibles. Guardar solo el hash de la clave.
+3. Límite de 60 consultas por minuto por clave (429 con Retry-After).
+4. Endpoints: GET /cuenta, GET /productos?q=, GET /productos/{codigo}, POST /stock/bulk (hasta 200 códigos),
+   GET /catalogo (paginado, con filtro actualizado_desde), GET /categorias, GET /direcciones,
+   POST /ordenes (idempotente por "referencia", valida precio_esperado y stock), GET /ordenes/{referencia}, GET /ordenes.
+5. Formato del producto: codigo (part number del fabricante), nombre, marca, categoria, precio y precio_final sin IVA
+   según el nivel del cliente, promocion {precio, unidades, vence}, iva_pct, peso_kg, stock por bodega
+   {stock, reservado, disponible}, disponible_total, en_transito, imagen, url, actualizado (ISO 8601).
+6. Una clave "sandbox" donde POST /ordenes simula la creación sin registrar nada en el ERP.
+7. Errores en JSON {"detail": "..."} en español con 401/403/404/409/422/429/500.
+8. Registro de auditoría de cada pedido y de cada uso de clave.
+
+Entregables que necesito de ti, en este orden:
+a) Las consultas SQL (o llamadas al ERP) para leer productos, precios por nivel, stock por bodega y reservas.
+b) El código del servicio con pruebas automáticas.
+c) Un panel simple para crear, renovar y revocar claves de clientes.
+d) La documentación para clientes en HTML, clara y con ejemplos curl, Python y JavaScript.
+Pregúntame lo que necesites saber de nuestro ERP antes de empezar.</code></pre>
+    <p class="muted small">Consejo: adjunte también esta misma guía (guárdela como PDF con el botón "Imprimir") para que Claude tenga el formato exacto.</p>
+  </section>
+
+  <!-- 12 -->
+  <section class="card" id="aceptacion">
+    <h2 class="sec">12. Pruebas de aceptación</h2>
+    <p>Con estos comandos ambos equipos pueden verificar que la conexión funciona. Reemplace la URL y la clave.</p>
+<pre id="tests"><button class="copy" type="button" data-target="tests">Copiar</button><code>BASE="https://api.su-empresa.com/api/v1"; KEY="ck_clave_de_pruebas"
+
+# 1. La clave funciona y muestra nivel de precio y vencimiento
+curl -s -H "X-API-Key: $KEY" "$BASE/cuenta"
+
+# 2. Búsqueda por part number y por descripción
+curl -s -H "X-API-Key: $KEY" "$BASE/productos?q=ABC123XYZ"
+curl -s -H "X-API-Key: $KEY" "$BASE/productos?q=notebook%20ryzen&amp;solo_disponibles=true"
+
+# 3. Stock de varios códigos (uno inexistente no debe dar error)
+curl -s -X POST -H "X-API-Key: $KEY" -H "Content-Type: application/json" \
+  -d '{"codigos":["ABC123XYZ","NOEXISTE"]}' "$BASE/stock/bulk"
+
+# 4. Catálogo paginado
+curl -s -H "X-API-Key: $KEY" "$BASE/catalogo?limit=500&amp;page=1"
+
+# 5. Pedido en sandbox, enviado DOS veces: la segunda debe responder "repetida": true
+curl -s -X POST -H "X-API-Key: $KEY" -H "Content-Type: application/json" \
+  -d '{"referencia":"PRUEBA-001","items":[{"codigo":"ABC123XYZ","cantidad":1}],"entrega":{"tipo":"retiro_gye"}}' \
+  "$BASE/ordenes"
+
+# 6. Clave inválida → 401 con mensaje claro
+curl -s -H "X-API-Key: ck_invalida" "$BASE/cuenta"</code></pre>
+    <ul class="check">
+      <li>Todas las respuestas son JSON con tildes correctas (UTF-8).</li>
+      <li>El precio coincide con el de su portal web para nuestro nivel.</li>
+      <li>El stock disponible descuenta lo reservado.</li>
+      <li>Reenviar un pedido con la misma referencia no lo duplica.</li>
+      <li>Superar 60 consultas por minuto devuelve <code>429</code>.</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  Documento de referencia elaborado por TECNOSMART para sus proveedores. Los ejemplos usan datos ficticios.
+  Puede compartirse libremente con su área técnica.
+</footer>
+
+<script>
+document.querySelectorAll(".copy").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var code = document.getElementById(b.dataset.target).querySelector("code").innerText;
+    function done(ok) { b.textContent = ok ? "¡Copiado!" : "Seleccione y copie"; setTimeout(function () { b.textContent = "Copiar"; }, 1600); }
+    if (navigator.clipboard) navigator.clipboard.writeText(code).then(function () { done(true); }, function () { done(false); });
+    else done(false);
+  });
+});
+</script>
+</body>
+</html>
