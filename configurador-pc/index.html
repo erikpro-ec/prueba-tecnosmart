@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurador PC · TECNOSMART</title>
+  <meta name="robots" content="noindex">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- LOGIN -->
+  <main id="v-login" class="login" hidden>
+    <form id="f-login" class="card login-card" autocomplete="on">
+      <div class="brand"><span class="logo">TS</span><div><b>TECNOSMART</b><small>Configurador de PC ensamblada</small></div></div>
+      <p class="muted">Ingresa con tu usuario de Odoo. Necesitas permisos de Ventas.</p>
+      <label>Usuario (correo)<input id="l-user" name="username" type="text" autocomplete="username" required></label>
+      <label>Contraseña<input id="l-pwd" name="password" type="password" autocomplete="current-password" required></label>
+      <label id="l-db-wrap" hidden>Base de datos<select id="l-db"></select><input id="l-db-txt" placeholder="Nombre de la base" hidden></label>
+      <label class="chk"><input id="l-rem" type="checkbox"> Recordar usuario en este equipo</label>
+      <button class="btn primary" id="l-btn" type="submit">Ingresar</button>
+      <p id="l-msg" class="msg" role="alert"></p>
+      <p class="muted small" id="l-mode"></p>
+    </form>
+  </main>
+
+  <!-- APP -->
+  <div id="v-app" hidden>
+    <header class="top">
+      <div class="brand"><span class="logo">TS</span><div><b>TECNOSMART</b><small>Configurador PC</small></div></div>
+      <div class="top-r">
+        <span id="u-name" class="muted small"></span>
+        <button class="btn ghost sm" id="b-diag" type="button" title="Productos ocultos por datos faltantes en el título">Diagnóstico</button>
+        <button class="btn ghost sm" id="b-new" type="button">Nuevo</button>
+        <button class="btn ghost sm" id="b-out" type="button">Salir</button>
+      </div>
+    </header>
+    <div id="loading" class="loading" hidden><span class="spin"></span><span id="loading-txt">Cargando catálogo…</span></div>
+
+    <div class="layout">
+      <nav id="steps" class="steps" aria-label="Componentes"></nav>
+
+      <section class="catalog card">
+        <div id="cat-head" class="cat-head"></div>
+        <div id="cat-list" class="cat-list"></div>
+      </section>
+
+      <aside id="cart" class="cart">
+        <div class="card">
+          <h2>Tu PC</h2>
+          <div id="cart-lines"></div>
+          <div class="disc">
+            <label>Descuento %
+              <input id="i-desc" type="number" min="0" step="0.5" value="0" inputmode="decimal">
+            </label>
+            <small class="muted" id="desc-hint"></small>
+          </div>
+          <div id="totals"></div>
+          <ul id="checklist" class="checklist"></ul>
+        </div>
+
+        <div class="card">
+          <h2>Cliente y pedido</h2>
+          <div class="seg" role="radiogroup" aria-label="Tipo de cliente">
+            <button type="button" data-cmode="final" class="on">Consumidor final</button>
+            <button type="button" data-cmode="existente">Buscar cliente</button>
+            <button type="button" data-cmode="nuevo">Nuevo cliente</button>
+          </div>
+          <div id="c-search-wrap" hidden>
+            <input id="c-search" type="search" placeholder="Nombre, cédula/RUC o teléfono" autocomplete="off">
+            <div id="c-results" class="results"></div>
+            <p id="c-picked" class="small"></p>
+          </div>
+          <div class="grid2">
+            <label>Nombre *<input id="c-nombre" autocomplete="off"></label>
+            <label>Apellido *<input id="c-apellido" autocomplete="off"></label>
+            <label>Teléfono *<input id="c-tel" inputmode="tel" autocomplete="off"></label>
+            <label>Email<input id="c-email" type="email" autocomplete="off"></label>
+            <label>Ciudad *<input id="c-ciudad" value="Guayaquil" autocomplete="off"></label>
+            <label>Canal *<select id="c-canal"></select></label>
+          </div>
+          <label>Nombre del computador *<input id="c-pc" placeholder="Ej.: Gamer Rayo" maxlength="40" autocomplete="off"></label>
+          <p class="small muted">Referencia del pedido: <b id="c-ref">—</b></p>
+          <div class="actions">
+            <button class="btn" id="b-pdf" type="button">PDF cliente</button>
+            <button class="btn" id="b-pdf-int" type="button">PDF interno</button>
+            <button class="btn primary" id="b-order" type="button">Crear pedido en Odoo</button>
+          </div>
+          <div id="order-ok"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="mbar"><span id="mbar-txt"></span><a class="btn primary sm" href="#cart">Ver mi PC</a></div>
+  </div>
+
+  <dialog id="dlg-zoom" class="dlg"><button class="x" data-close aria-label="Cerrar">×</button><img id="zoom-img" alt=""><p id="zoom-cap"></p></dialog>
+  <dialog id="dlg-diag" class="dlg wide"><button class="x" data-close aria-label="Cerrar">×</button><div id="diag-body"></div></dialog>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+  <script src="config.js" defer></script>
+  <script src="compat.js" defer></script>
+  <script src="odoo.js" defer></script>
+  <script src="demo.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
